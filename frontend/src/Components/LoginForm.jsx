@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate hook for programmatic navigation
 import axios from 'axios';
 
 const LoginForm = () => {
@@ -9,7 +9,7 @@ const LoginForm = () => {
         password: ''
     });
     const [error, setError] = useState('');
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigate = useNavigate(); // Initialize useNavigate hook for navigation
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,17 +18,26 @@ const LoginForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8081/api/auth/login', formData);
-            // Check user role and redirect accordingly
-            const userRoles = response.data.roles.map(role => role.name);
-            if (userRoles.includes('ROLE_PATIENT')) {
-                navigate('/patient-dashboard'); // Redirect to patient dashboard
-            } else if (userRoles.includes('ROLE_ADMIN')) {
-                navigate('/admin-dashboard'); // Redirect to admin dashboard
-            } else if (userRoles.includes('ROLE_TECHNICIAN')) {
-                navigate('/technician-dashboard'); // Redirect to technician dashboard
+            const response = await axios.post('http://localhost:8084/api/auth/login', formData);
+    
+            if (response.status === 200) {
+                const user = response.data;
+                if (user.roles && user.roles.length > 0) {
+                    // Redirect user based on their role
+                    if (user.roles.includes('ROLE_PATIENT')) {
+                        navigate('/PatientDashboard');
+                    } else if (user.roles.includes('ROLE_ADMIN')) {
+                        navigate('/AdminDashboard');
+                    } else if (user.roles.includes('ROLE_TECHNICIAN')) {
+                        navigate('/TechnicianDashboard');
+                    } else {
+                        setError('Invalid user role');
+                    }
+                } else {
+                    setError('User roles not found');
+                }
             } else {
-                setError('Invalid user role');
+                setError('Invalid response status');
             }
         } catch (error) {
             setError('Invalid username or password');
@@ -37,10 +46,9 @@ const LoginForm = () => {
     };
 
     return (
-        <div>
         <div className="container">
             <h2 className="text-center">User Login</h2>
-            {error && <Alert variant="danger">{error}</Alert>}
+            {error && <Alert variant="danger">{error}</Alert>} {/* Display error message if login fails */}
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username</Form.Label>
@@ -71,9 +79,8 @@ const LoginForm = () => {
                 </Button>
             </Form>
             <p className="mt-3">
-                New user? <Link to="/register">Register here</Link>
+                New user? <Link to="/register">Register here</Link> {/* Link to registration page */}
             </p>
-        </div>
         </div>
     );
 };

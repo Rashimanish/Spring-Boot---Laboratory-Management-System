@@ -18,5 +18,7 @@ public interface UserService {
     
     UserDto mapToUserDto(User user);
 
+    public boolean authenticateUser(String username, String password);
+
     
 } 

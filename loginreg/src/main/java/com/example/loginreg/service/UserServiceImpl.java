@@ -71,8 +71,14 @@ public class UserServiceImpl implements UserService{
         userDto.setGender(user.getGender());
         userDto.setEmail(user.getEmail());
         userDto.setUsername(user.getUsername());
+        // Extract role names from Role objects and set them in the UserDto
+        List<String> roleNames = user.getRoles().stream()
+                .map(role -> role.getName()) // Extract role names
+                .collect(Collectors.toList());
+        userDto.setRoles(roleNames);
         return userDto;
     }
+
 
     private Role createRole(String roleName) {
         Role role = new Role();
@@ -80,4 +86,9 @@ public class UserServiceImpl implements UserService{
         return roleRepository.save(role);
     }
     
+    @Override
+    public boolean authenticateUser(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        return user != null && user.getPassword().equals(password);
+    }
 }

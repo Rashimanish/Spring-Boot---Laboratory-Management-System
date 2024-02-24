@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.loginreg.dto.LoginRequestDTO;
 import com.example.loginreg.dto.UserDto;
+import com.example.loginreg.entity.User;
 import com.example.loginreg.service.UserService;
 
 
@@ -26,6 +29,22 @@ public class AuthController {
                                  .body("Registration failed: " + e.getMessage());
         }
     }
+
+    @PostMapping("/login")
+public ResponseEntity<UserDto> loginUser(@RequestBody LoginRequestDTO loginRequest) {
+    String username = loginRequest.getUsername();
+    String password = loginRequest.getPassword();
+
+    boolean isAuthenticated = userService.authenticateUser(username, password);
+    if (isAuthenticated) {
+        User user = userService.findByUsername(username);
+        UserDto userDto = userService.mapToUserDto(user);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    } else {
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+}
+    
     /* 
 
     @PostMapping("/login")
