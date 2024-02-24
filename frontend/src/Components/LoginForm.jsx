@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { Link, useHistory } from 'react-router-dom'; // Import useHistory hook
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import axios from 'axios';
 
 const LoginForm = () => {
@@ -9,7 +9,7 @@ const LoginForm = () => {
         password: ''
     });
     const [error, setError] = useState('');
-    const history = useHistory(); // Initialize useHistory hook
+    const navigate = useNavigate(); // Initialize useNavigate hook
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,15 +18,15 @@ const LoginForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/auth/login', formData);
+            const response = await axios.post('http://localhost:8081/api/auth/login', formData);
             // Check user role and redirect accordingly
             const userRoles = response.data.roles.map(role => role.name);
             if (userRoles.includes('ROLE_PATIENT')) {
-                history.push('/patient-dashboard'); // Redirect to patient dashboard
+                navigate('/patient-dashboard'); // Redirect to patient dashboard
             } else if (userRoles.includes('ROLE_ADMIN')) {
-                history.push('/admin-dashboard'); // Redirect to admin dashboard
+                navigate('/admin-dashboard'); // Redirect to admin dashboard
             } else if (userRoles.includes('ROLE_TECHNICIAN')) {
-                history.push('/technician-dashboard'); // Redirect to technician dashboard
+                navigate('/technician-dashboard'); // Redirect to technician dashboard
             } else {
                 setError('Invalid user role');
             }
@@ -37,6 +37,7 @@ const LoginForm = () => {
     };
 
     return (
+        <div>
         <div className="container">
             <h2 className="text-center">User Login</h2>
             {error && <Alert variant="danger">{error}</Alert>}
@@ -70,8 +71,9 @@ const LoginForm = () => {
                 </Button>
             </Form>
             <p className="mt-3">
-                New user? <Link to="/api/auth/register">Register here</Link>
+                New user? <Link to="/register">Register here</Link>
             </p>
+        </div>
         </div>
     );
 };

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
-const RegisterForm = () => {
+const RegistrationForm = () => {
+    const navigate = useNavigate(); // Initialize useNavigate hook
     const [formData, setFormData] = useState({
         name: '',
         age: '',
@@ -12,7 +14,9 @@ const RegisterForm = () => {
         username: '',
         password: ''
     });
+    const [error, setError] = useState(''); // Define error state variable
 
+    // Define handleChange function to handle input changes
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -20,10 +24,15 @@ const RegisterForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/auth/register', formData);
-            // Redirect to login page after successful registration
-            window.location.href = '/login';
+            const response = await axios.post('http://localhost:8084/api/auth/register', formData);
+            // Check if registration was successful
+            if (response.status === 200) {
+                // Redirect to login page after successful registration using navigate()
+                navigate('/login');
+            }
         } catch (error) {
+            // Handle registration failure and display error message
+            setError('Registration failed. Please try again.');
             console.error('Registration failed:', error);
         }
     };
@@ -31,6 +40,7 @@ const RegisterForm = () => {
     return (
         <div className="container">
             <h2 className="text-center">Registration</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="name">
                     <Form.Label>Name</Form.Label>
@@ -127,4 +137,4 @@ const RegisterForm = () => {
     );
 };
 
-export default RegisterForm;
+export default RegistrationForm;
