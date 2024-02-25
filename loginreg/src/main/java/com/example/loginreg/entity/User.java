@@ -23,6 +23,6 @@ public class User {
     private String email;
     private String username;
     private String password;
-    private List<Role> roles;
+    private List<Role> role;
     
 }

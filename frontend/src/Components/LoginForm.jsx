@@ -27,7 +27,7 @@ const LoginForm = () => {
                     if (user.roles.includes('ROLE_PATIENT')) {
                         navigate('/PatientDashboard');
                     } else if (user.roles.includes('ROLE_ADMIN')) {
-                        navigate('/AdminDashboard');
+                        navigate('/admin');
                     } else if (user.roles.includes('ROLE_TECHNICIAN')) {
                         navigate('/TechnicianDashboard');
                     } else {

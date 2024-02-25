@@ -43,8 +43,19 @@ public ResponseEntity<UserDto> loginUser(@RequestBody LoginRequestDTO loginReque
     } else {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+
 }
     
+    @PostMapping("/createuser")
+    public ResponseEntity<String> createUser(@RequestBody UserDto userDto, @RequestParam("role") String roleName) {
+    try {
+        userService.saveUserWithRole(userDto, roleName);
+        return ResponseEntity.ok(roleName + "User created successfully!!: ");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("User creation failed: " + e.getMessage());
+    }
+}
     /* 
 
     @PostMapping("/login")

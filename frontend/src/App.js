@@ -16,7 +16,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/patient" element={<PatientDashboard />} />
       <Route path="/technician" element={<TechnicianDashboard />} />
-      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/admin/*" element={<AdminDashboard />} />
+      <Route path="/admin/:selectedItem" element={<AdminDashboard />} />
       </Routes>
     </div>
   </Router>

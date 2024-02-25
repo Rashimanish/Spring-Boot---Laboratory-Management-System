@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService{
         if (role == null) {
             role = createRole(roleName);
         }
-        user.setRoles(Collections.singletonList(role));
+        user.setRole(Collections.singletonList(role));
 
         userRepository.save(user);
     }
@@ -72,12 +72,13 @@ public class UserServiceImpl implements UserService{
         userDto.setEmail(user.getEmail());
         userDto.setUsername(user.getUsername());
         // Extract role names from Role objects and set them in the UserDto
-        List<String> roleNames = user.getRoles().stream()
+        List<String> roleNames = user.getRole().stream()
                 .map(role -> role.getName()) // Extract role names
                 .collect(Collectors.toList());
         userDto.setRoles(roleNames);
         return userDto;
     }
+    
 
 
     private Role createRole(String roleName) {
@@ -92,3 +93,4 @@ public class UserServiceImpl implements UserService{
         return user != null && user.getPassword().equals(password);
     }
 }
+
