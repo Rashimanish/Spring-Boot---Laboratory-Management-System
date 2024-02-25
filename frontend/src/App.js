@@ -5,7 +5,7 @@ import Login from './Pages/Login';
 import PatientDashboard from './Pages/PatientDashboard';
 import TechnicianDashboard from './Pages/TechnicianDashboard';
 import AdminDashboard from './Pages/AdminDashboard';
-import ViewUser from './Components/ViewUser'
+
 
 function App() {
   return (

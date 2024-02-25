@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './component.css';
 import { Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
@@ -38,7 +39,8 @@ const RegistrationForm = () => {
     };
 
     return (
-        <div className="container">
+        <div className='reg-container'>
+        <div className="form-container">
             <h2 className="text-center">Registration</h2>
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit}>
@@ -133,6 +135,7 @@ const RegistrationForm = () => {
                     Register
                 </Button>
             </Form>
+        </div>
         </div>
     );
 };

@@ -6,11 +6,13 @@ import Footer from '../Components/Footer';
 
 const Login = () => {
     return (
+        
         <div>
             <Header />
             <LoginForm />
             <Footer />
         </div>
+       
     );
 }
 

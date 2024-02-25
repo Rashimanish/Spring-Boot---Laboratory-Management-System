@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './component.css';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate hook for programmatic navigation
 import axios from 'axios';
@@ -22,13 +23,13 @@ const LoginForm = () => {
     
             if (response.status === 200) {
                 const user = response.data;
-                if (user.roles && user.roles.length > 0) {
+                if (user.role && user.role.length > 0) {
                     // Redirect user based on their role
-                    if (user.roles.includes('ROLE_PATIENT')) {
+                    if (user.role.includes('Patient')) {
                         navigate('/PatientDashboard');
-                    } else if (user.roles.includes('ROLE_ADMIN')) {
+                    } else if (user.role.includes('ROLE_ADMIN')) {
                         navigate('/admin');
-                    } else if (user.roles.includes('ROLE_TECHNICIAN')) {
+                    } else if (user.role.includes('Technician')) {
                         navigate('/TechnicianDashboard');
                     } else {
                         setError('Invalid user role');
@@ -46,7 +47,8 @@ const LoginForm = () => {
     };
 
     return (
-        <div className="container">
+        
+        <div className="login-container">
             <h2 className="text-center">User Login</h2>
             {error && <Alert variant="danger">{error}</Alert>} {/* Display error message if login fails */}
             <Form onSubmit={handleSubmit}>
@@ -82,6 +84,7 @@ const LoginForm = () => {
                 New user? <Link to="/register">Register here</Link> {/* Link to registration page */}
             </p>
         </div>
+       
     );
 };
 

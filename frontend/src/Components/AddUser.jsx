@@ -1,4 +1,4 @@
-
+import './component.css';
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
@@ -18,7 +18,7 @@ const AddUser = () => {
     });
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const [success, setSuccess] = useState(false); 
+    const [success] = useState(false); 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,7 +42,7 @@ const AddUser = () => {
       }
   };
     return (
-      <div className="container">
+      <div className="form-container">
            <h2 className="text-center">Add User</h2>
           {error && <Alert variant="danger">{error}</Alert>}
           {successMessage && <Alert variant="success">{successMessage}</Alert>}

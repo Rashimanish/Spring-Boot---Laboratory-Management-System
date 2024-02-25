@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void savePatient(UserDto userDto) {
-        saveUserWithRole(userDto, "ROLE_PATIENT");
+        saveUserWithRole(userDto, "Patient");
     }
 
     @Override
@@ -72,10 +72,10 @@ public class UserServiceImpl implements UserService{
         userDto.setEmail(user.getEmail());
         userDto.setUsername(user.getUsername());
         // Extract role names from Role objects and set them in the UserDto
-        List<String> roleNames = user.getRole().stream()
+        List<String> roleName = user.getRole().stream()
                 .map(role -> role.getName()) // Extract role names
                 .collect(Collectors.toList());
-        userDto.setRoles(roleNames);
+        userDto.setRole(roleName);
         return userDto;
     }
     

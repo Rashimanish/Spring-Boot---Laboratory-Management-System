@@ -1,6 +1,8 @@
 package com.example.loginreg.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,7 @@ import com.example.loginreg.service.UserService;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/auth")
-public class AuthController {
+public class UserController {
 
    @Autowired
    private UserService userService;
@@ -56,6 +58,12 @@ public ResponseEntity<UserDto> loginUser(@RequestBody LoginRequestDTO loginReque
                 .body("User creation failed: " + e.getMessage());
     }
 }
+
+    @GetMapping("/viewusers")
+    public List<UserDto> findAllUsers() {
+        return userService.findAllUsers();
+    }
+    
     /* 
 
     @PostMapping("/login")

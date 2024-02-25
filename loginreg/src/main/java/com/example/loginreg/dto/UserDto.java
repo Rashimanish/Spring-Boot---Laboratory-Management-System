@@ -22,7 +22,7 @@ public class UserDto {
     private String email;
     private String username;
     private String password;
-    private List<String> roles;
+    private List<String> role;
 
     
 }
