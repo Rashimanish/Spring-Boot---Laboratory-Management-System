@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './component.css';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate hook for programmatic navigation
+import { Link, useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 
 const LoginForm = () => {

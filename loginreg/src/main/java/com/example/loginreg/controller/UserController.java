@@ -64,36 +64,6 @@ public ResponseEntity<UserDto> loginUser(@RequestBody LoginRequestDTO loginReque
         return userService.findAllUsers();
     }
     
-    /* 
-
-    @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestParam("username") String username, @RequestParam("password") String password) {
-        // Implement login logic
-        boolean isAuthenticated = userService.authenticateUser(username, password);
-        if (isAuthenticated) {
-            return new ResponseEntity<>("User logged in successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    @GetMapping("/users")
-    public List<UserDto> getAllUsers() {
-        return userService.findAllUsers();
-    }
-
-    @GetMapping("/users/{username}")
-    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-        User user = userService.findByUsername(username);
-        if (user != null) {
-            UserDto userDto = userService.mapToUserDto(user);
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
-        } else {
-            // Handle user not found case
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    */
 }
 
     
