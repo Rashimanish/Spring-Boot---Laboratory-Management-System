@@ -43,6 +43,20 @@ public class TestServiceImpl implements TestService{
         Test savedTest = testRepository.save(test);
         return convertToDTO(savedTest);
     }
+    public void deleteTest(String id) {
+        testRepository.deleteById(id);
+    }
+
+    public TestDTO updateTest(String id, TestDTO testDTO) {
+        Test test = testRepository.findById(id).orElse(null);
+        if (test != null && testDTO != null) {
+            test.setTestName(testDTO.getTestName());
+            test.setTestCode(testDTO.getTestCode());
+            testRepository.save(test);
+            return convertToDTO(test);
+        }
+        return null;
+    }
 
     private TestDTO convertToDTO(Test test) {
         return modelMapper.map(test, TestDTO.class);

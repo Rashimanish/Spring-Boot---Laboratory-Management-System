@@ -15,5 +15,9 @@ public interface TestService {
 
     TestDTO addTest(TestDTO testDTO);
 
+    void deleteTest(String testCode);
+
+    TestDTO updateTest(String id, TestDTO testDTO);
+
     
 }
