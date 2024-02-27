@@ -4,8 +4,9 @@ import './component.css';
 import axios from 'axios';
 
 const TestForm = () => {
-    const [testName, setTestName] = useState('');
     const [testCode, setTestCode] = useState('');
+    const [testName, setTestName] = useState('');
+    const [price, setPrice] = useState(0.0);
     const [tests, setTests] = useState([]);
     const [filteredTests, setFilteredTests] = useState([]);
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -22,6 +23,7 @@ const TestForm = () => {
             const response = await axios.get('http://localhost:8084/api/tests/viewall');
             setTests(response.data);
             setFilteredTests(response.data);
+            setErrorMessage('');
         } catch (error) {
             setErrorMessage('Error fetching tests');
         }
@@ -32,9 +34,11 @@ const TestForm = () => {
         try {
             const response = await axios.post('http://localhost:8084/api/tests/addtest', {
                 testName: testName,
+                price: price
             });
             setTestCode(response.data.testCode);
             setTestName('');
+            setPrice(0.0);
             fetchTests();
             setErrorMessage('');
         } catch (error) {
@@ -63,17 +67,18 @@ const TestForm = () => {
 
     const handleEdit = (id) => {
         const selectedTest = tests.find((test) => test.id === id);
-        setTestName(selectedTest.testName);
         setTestCode(selectedTest.testCode);
+        setTestName(selectedTest.testName);
+        setPrice(selectedTest.price);
         setSelectedTestId(id);
         setShowModal(true);
     };
-
 
     const handleCloseModal = () => {
         setShowModal(false);
         setTestName('');
         setTestCode('');
+        setPrice(0.0);
         setSelectedTestId('');
     };
 
@@ -82,6 +87,7 @@ const TestForm = () => {
             await axios.put(`http://localhost:8084/api/tests/update/${selectedTestId}`, {
                 testName: testName,
                 testCode: testCode,
+                price: price
             });
             handleCloseModal();
             fetchTests();
@@ -102,6 +108,14 @@ const TestForm = () => {
                         onChange={(e) => setTestName(e.target.value)}
                     />
                 </Form.Group>
+                <Form.Group>
+                    <Form.Label>Test Price:</Form.Label>
+                    <Form.Control
+                        type="number"
+                        value={price.toString()}
+                        onChange={(e) => setPrice(parseFloat(e.target.value))}
+                    />
+                </Form.Group>
                 <Button type="submit">Add Test</Button>
             </Form>
             {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
@@ -117,16 +131,18 @@ const TestForm = () => {
             <Table striped bordered hover responsive className="mt-3">
                 <thead>
                     <tr>
-                        <th>Test Name</th>
                         <th>Test Code</th>
+                        <th>Test Name</th>
+                        <th>Test Price</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {filteredTests.map((test) => (
                         <tr key={test.id}>
-                            <td>{test.testName}</td>
                             <td>{test.testCode}</td>
+                            <td>{test.testName}</td>
+                            <td>{test.price}</td>
                             <td>
                                 <Button variant="danger" onClick={() => handleDelete(test.id)}>
                                     Delete
@@ -145,6 +161,14 @@ const TestForm = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group>
+                        <Form.Label>Test Code:</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={testCode}
+                            onChange={(e) => setTestCode(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group>
                         <Form.Label>Test Name:</Form.Label>
                         <Form.Control
                             type="text"
@@ -153,11 +177,11 @@ const TestForm = () => {
                         />
                     </Form.Group>
                     <Form.Group>
-                        <Form.Label>Test Code:</Form.Label>
+                        <Form.Label>Test Price:</Form.Label>
                         <Form.Control
-                            type="text"
-                            value={testCode}
-                            onChange={(e) => setTestCode(e.target.value)}
+                            type="number"
+                            value={price.toString()}
+                            onChange={(e) => setPrice(parseFloat(e.target.value))}
                         />
                     </Form.Group>
                 </Modal.Body>
@@ -226,119 +250,6 @@ export default TestForm;
 
 
 
-
-
-
-
-
-
-
-/*import React, { useState , useEffect} from 'react';
-import { Form, Button , Alert, Table, FormControl } from 'react-bootstrap';
-import './component.css';
-import axios from 'axios';
-
-const TestForm = () => {
-    const [testName, setTestName] = useState(''); // Define testName state variable
-    const [successMessage, setSuccessMessage] = useState(''); // Define success message state variable
-    const [testCode, setTestCode] = useState('');
-    const [tests, setTests] = useState([]);
-    const [filteredTests, setFilteredTests] = useState([]);
-    const [searchKeyword, setSearchKeyword] = useState('');
-
-    useEffect(() => {
-        fetchTests();
-    }, []);
-
-    const fetchTests = async () => {
-        try {
-            const response = await axios.get('http://localhost:8084/api/tests/viewall');
-            setTests(response.data);
-            setFilteredTests(response.data);
-        } catch (error) {
-            console.error('Error fetching tests:', error);
-        }
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        try {
-            // Send POST request to add new test
-            const response = await axios.post('http://localhost:8084/api/tests/addtest', {
-                testName: testName,
-            });
-
-            // Handle success response
-            console.log('Test added successfully:', response.data);
-            setSuccessMessage('Test added successfully'); // Set the success message
-            setTestCode(response.data.testCode); 
-            setTestName(''); 
-            fetchTests(); 
-        } catch (error) {
-            // Handle error
-            console.error('Error adding test:', error);
-            setSuccessMessage(''); // Clear success message if there's an error
-        }
-    };
-
-    const handleSearch = (event) => {
-        const keyword = event.target.value.toLowerCase();
-        setSearchKeyword(keyword);
-        const filtered = tests.filter((test) =>
-            test.testName.toLowerCase().includes(keyword)
-        );
-        setFilteredTests(filtered);
-    };
-
-    return (
-        <div>
-           <Form onSubmit={handleSubmit}>
-    <Form.Group>
-        <Form.Label>Test Name:</Form.Label>
-        <Form.Control
-            type="text"
-            value={testName}
-            onChange={(e) => setTestName(e.target.value)}
-        />
-    </Form.Group>
-    <Button type="submit">Add Test</Button>
-    </Form>
-         {successMessage && <Alert variant="success">{successMessage}</Alert>}
-        {testCode && <p>Test Code: {testCode}</p>}
-        <Form className="mt-4">
-                <FormControl
-                    type="text"
-                    placeholder="Search by Test Name"
-                    className="mr-sm-2"
-                    value={searchKeyword}
-                    onChange={handleSearch}
-                />
-            </Form>
-
-            <Table striped bordered hover responsive className="mt-3">
-                <thead>
-                    <tr>
-                        <th>Test Name</th>
-                        <th>Test Code</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredTests.map((test) => (
-                        <tr key={test.id}>
-                            <td>{test.testName}</td>
-                            <td>{test.testCode}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
-        </div>
-    );
-};
-
-export default TestForm;
-
-*/
 
 
 

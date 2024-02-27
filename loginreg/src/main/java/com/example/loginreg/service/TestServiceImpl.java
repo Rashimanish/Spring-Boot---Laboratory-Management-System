@@ -51,6 +51,7 @@ public class TestServiceImpl implements TestService{
         Test test = testRepository.findById(id).orElse(null);
         if (test != null && testDTO != null) {
             test.setTestName(testDTO.getTestName());
+            test.setPrice(testDTO.getPrice());
             test.setTestCode(testDTO.getTestCode());
             testRepository.save(test);
             return convertToDTO(test);

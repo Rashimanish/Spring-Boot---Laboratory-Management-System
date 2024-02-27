@@ -17,6 +17,7 @@ public class Test {
     private String id;
     private String testCode;
     private String testName;
+    private double price;
     
     
 }
