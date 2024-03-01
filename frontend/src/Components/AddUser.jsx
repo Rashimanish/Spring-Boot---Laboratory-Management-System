@@ -1,11 +1,11 @@
-import './component.css';
 import React, { useState } from 'react';
+import './component.css';
 import { Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const AddUser = () => {
-  const navigate = useNavigate(); 
+    const navigate = useNavigate(); 
     const [formData, setFormData] = useState({
         name: '',
         age: '',
@@ -14,39 +14,36 @@ const AddUser = () => {
         email: '',
         username: '',
         password: '',
-        role: '', // Adding role field to form data
+        role: ''
     });
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    const [success] = useState(false); 
+    const [error, setError] = useState(''); 
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-          const response = await axios.post('http://localhost:8084/api/auth/createuser', formData, {
-              params: { role: formData.role } 
-          });
-          if (response.status === 200) {
-              setSuccessMessage('User created successfully!');
-              setTimeout(() => {
-                  navigate('/admin/viewUser');
-              }, 2000); 
-          }
-      } catch (error) {
-          setError('User creation failed. Please try again.');
-          console.error('User creation failed:', error);
-      }
-  };
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:8084/api/auth/register', formData);
+            // Check if registration was successful
+            if (response.status === 200) {
+                // Redirect to login page after successful registration using navigate()
+                navigate('admin/viewUser');
+            }
+        } catch (error) {
+            // Handle registration failure and display error message
+            setError('Registration failed. Please try again.');
+            console.error('Registration failed:', error);
+        }
+    };
+
     return (
-      <div className="form-container">
-           <h2 className="text-center">Add User</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-          {successMessage && <Alert variant="success">{successMessage}</Alert>}
-          {!success && (
+        <div className='reg-container'>
+        <div className="form-container">
+            <h2 className="text-center">Create User</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="name">
                     <Form.Label>Name</Form.Label>
@@ -150,12 +147,12 @@ const AddUser = () => {
                 </Form.Group>
 
                 <Button variant="primary" type="submit">
-                    Add User
+                    Register
                 </Button>
             </Form>
-            )}
+        </div>
         </div>
     );
-  };
+};
   
   export default AddUser;

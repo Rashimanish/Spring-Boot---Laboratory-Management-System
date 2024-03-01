@@ -1,96 +1,103 @@
 package com.example.loginreg.service;
 
-import java.util.Collections;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
-import com.example.loginreg.repository.RoleRepository;
+
 import com.example.loginreg.repository.UserRepository;
-import com.example.loginreg.entity.User; 
-import com.example.loginreg.entity.Role; 
+import com.example.loginreg.entity.User;
 import com.example.loginreg.dto.UserDto;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
-   
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    
+    @Autowired
+    private UserRepository userRepository;
 
-    
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
 
     @Override
-    public void savePatient(UserDto userDto) {
-        saveUserWithRole(userDto, "Patient");
-    }
-
-    @Override
-    public void saveUserWithRole(UserDto userDto, String roleName) {
+    public void saveUser(UserDto userDto) {
         User user = new User();
+        user.setId(userDto.getId());
         user.setName(userDto.getName());
         user.setAge(userDto.getAge());
         user.setContact(userDto.getContact());
         user.setGender(userDto.getGender());
         user.setEmail(userDto.getEmail());
         user.setUsername(userDto.getUsername());
-        user.setPassword((userDto.getPassword()));
-
-        Role role = roleRepository.findByName(roleName);
-        if (role == null) {
-            role = createRole(roleName);
-        }
-        user.setRole(Collections.singletonList(role));
-
+        user.setPassword(userDto.getPassword());
+        user.setRole(userDto.getRole());
+        
         userRepository.save(user);
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public UserDto findByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        return user != null ? mapToUserDto(user) : null;
     }
 
     @Override
     public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAll();
-        return users.stream()
-                .map(this::mapToUserDto)
-                .collect(Collectors.toList());
+        return users.stream().map(this::mapToUserDto).collect(Collectors.toList());
     }
 
-    public UserDto mapToUserDto(User user) {
+    @Override
+    public UserDto findUserById(String id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        return userOptional.map(this::mapToUserDto).orElse(null);
+    }
+
+    @Override
+    public UserDto updateUser(String id, UserDto userDto) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setId(userDto.getId());
+            user.setName(userDto.getName());
+            user.setAge(userDto.getAge());
+            user.setContact(userDto.getContact());
+            user.setGender(userDto.getGender());
+            user.setEmail(userDto.getEmail());
+            user.setUsername(userDto.getUsername());
+            user.setPassword(userDto.getPassword());
+            userRepository.save(user);
+            return mapToUserDto(user);
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean authenticateUser(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        return user != null && user.getPassword().equals(password);
+    }
+
+
+    private UserDto mapToUserDto(User user) {
         UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
         userDto.setName(user.getName());
         userDto.setAge(user.getAge());
         userDto.setContact(user.getContact());
         userDto.setGender(user.getGender());
         userDto.setEmail(user.getEmail());
         userDto.setUsername(user.getUsername());
-        // Extract role names from Role objects and set them in the UserDto
-        List<String> roleName = user.getRole().stream()
-                .map(role -> role.getName()) // Extract role names
-                .collect(Collectors.toList());
-        userDto.setRole(roleName);
+        userDto.setPassword(user.getPassword());
+        userDto.setRole(user.getRole());
         return userDto;
     }
-    
-
-
-    private Role createRole(String roleName) {
-        Role role = new Role();
-        role.setName(roleName);
-        return roleRepository.save(role);
-    }
-    
-    @Override
-    public boolean authenticateUser(String username, String password) {
-        User user = userRepository.findByUsername(username);
-        return user != null && user.getPassword().equals(password);
-    }
 }
+
+
 

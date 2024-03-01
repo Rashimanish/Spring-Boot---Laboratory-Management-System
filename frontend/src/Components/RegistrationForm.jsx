@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
 const RegistrationForm = () => {
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigate = useNavigate(); 
     const [formData, setFormData] = useState({
         name: '',
         age: '',
@@ -13,13 +13,15 @@ const RegistrationForm = () => {
         gender: '',
         email: '',
         username: '',
-        password: ''
+        password: '',
+        role: ''
     });
     const [error, setError] = useState(''); // Define error state variable
 
     // Define handleChange function to handle input changes
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = async (e) => {
@@ -129,6 +131,19 @@ const RegistrationForm = () => {
                         onChange={handleChange}
                         required
                     />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="role">
+                    <Form.Label>Role</Form.Label>
+                    <Form.Select
+                        name="role"
+                        value={formData.role}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select Role</option>
+                        <option value="Patient">Patient</option>
+                    </Form.Select>
                 </Form.Group>
 
                 <Button variant="primary" type="submit">

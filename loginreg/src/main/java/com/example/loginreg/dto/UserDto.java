@@ -1,13 +1,12 @@
 package com.example.loginreg.dto;
 
-import java.util.List;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 
 @Data
 @AllArgsConstructor
@@ -15,6 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDto {
+    private String id;
     private String name;
     private int age;
     private String contact;
@@ -22,7 +22,5 @@ public class UserDto {
     private String email;
     private String username;
     private String password;
-    private List<String> role;
-
-    
+    private String role;
 }
