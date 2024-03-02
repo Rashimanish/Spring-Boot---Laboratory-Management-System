@@ -6,6 +6,7 @@ import AddUser from '../Components/AddUser';
 import ViewUser from '../Components/ViewUser';
 import Footer from '../Components/Footer';
 import TestForm from '../Components/TestForm';
+import DoctorProfile from '../Components/DoctorProfile';
 
 
 const AdminDashboard = () => {
@@ -20,6 +21,8 @@ const AdminDashboard = () => {
                return <ViewUser />;
             case 'addTest':
                return <TestForm />;
+            case 'doctorProfile':
+                return <DoctorProfile />
             // Add cases for other components
             default:
                 return null;
@@ -35,6 +38,7 @@ const AdminDashboard = () => {
                             <Nav.Link href="/admin/viewUser">View User</Nav.Link>
                             <Nav.Link href="/admin/addUser">Add User</Nav.Link>
                             <Nav.Link href="/admin/addTest">Create test</Nav.Link>
+                            <Nav.Link href="/admin/doctorProfile">Manage Doctor Profile</Nav.Link>
                             {/* Add other Nav links as needed */}
                         </Nav>
                     </Col>
