@@ -40,12 +40,12 @@ const ViewUser = () => {
 
 
     const handleDelete = (id) => {
-        // Convert id to string for comparison
+
         const userId = String(id);
     
         axios.delete(`http://localhost:8084/api/auth/deleteuser/${id}`)
             .then(() => {
-                // Remove the deleted user from the state
+
                 setUsers(users.filter(user => user.id !== userId));
             })
             .catch(error => {
@@ -58,15 +58,14 @@ const ViewUser = () => {
             
             const { name, username, email, age, contact, gender } = selectedUser;
 
-            // Create a new object with only the editable fields
             const updatedUser = { name, username, email, age, contact, gender };
 
-            // Send PUT request to update user details
+
             axios.put(`http://localhost:8084/api/auth/updateuser/${selectedUser.id}`, updatedUser)
                 .then(() => {
-                    // Close the modal
+                    
                     setShowModal(false);
-                    // Refresh users after update
+                    
                     fetchUsers();
                 })
                 .catch(error => {
@@ -118,13 +117,13 @@ const ViewUser = () => {
     ))}
     </tbody>
             </Table>
-            {/* Edit Modal */}
+
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit User</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* Form to edit user details */}
+                    
                     {selectedUser !== null &&(
                         <Form>
                             <Form.Group controlId="formName">

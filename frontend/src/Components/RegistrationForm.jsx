@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './component.css';
 import { Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm = () => {
     const navigate = useNavigate(); 
@@ -16,9 +16,8 @@ const RegistrationForm = () => {
         password: '',
         role: ''
     });
-    const [error, setError] = useState(''); // Define error state variable
+    const [error, setError] = useState(''); 
 
-    // Define handleChange function to handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -34,7 +33,7 @@ const RegistrationForm = () => {
                 navigate('/login');
             }
         } catch (error) {
-            // Handle registration failure and display error message
+            
             setError('Registration failed. Please try again.');
             console.error('Registration failed:', error);
         }

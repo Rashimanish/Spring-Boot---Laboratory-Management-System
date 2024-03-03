@@ -10,7 +10,7 @@ const LoginForm = () => {
         password: ''
     });
     const [error, setError] = useState('');
-    const navigate = useNavigate(); // Initialize useNavigate hook for navigation
+    const navigate = useNavigate(); 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -50,7 +50,7 @@ const LoginForm = () => {
         
         <div className="login-container">
             <h2 className="text-center">User Login</h2>
-            {error && <Alert variant="danger">{error}</Alert>} {/* Display error message if login fails */}
+            {error && <Alert variant="danger">{error}</Alert>} 
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username</Form.Label>
@@ -81,7 +81,7 @@ const LoginForm = () => {
                 </Button>
             </Form>
             <p className="mt-3">
-                New user? <Link to="/register">Register here</Link> {/* Link to registration page */}
+                New user? <Link to="/register">Register here</Link> 
             </p>
         </div>
        

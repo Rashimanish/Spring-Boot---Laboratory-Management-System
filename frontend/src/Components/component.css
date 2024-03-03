@@ -39,7 +39,7 @@
     width: 600px;
     max-width: 80%;
     margin-top: 30px;
-    margin-bottom: 30px; /* Add margin to separate from footer */
+    margin-bottom: 30px; 
 }
 
 .form-container input[type='text'],
