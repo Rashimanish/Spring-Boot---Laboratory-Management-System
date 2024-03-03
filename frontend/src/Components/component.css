@@ -10,6 +10,21 @@
     color: #333333;
 }
 
+.welcomecontainer {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center; 
+}
+
+.welcomemsg {
+    color: blue; 
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 .login-container {
     display: flex;
     flex-direction: column;

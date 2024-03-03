@@ -10,6 +10,7 @@ const LoginForm = () => {
         password: ''
     });
     const [error, setError] = useState('');
+    
     const navigate = useNavigate(); 
 
     const handleChange = (e) => {
@@ -23,6 +24,9 @@ const LoginForm = () => {
     
             if (response.status === 200) {
                 const user = response.data;
+                localStorage.setItem('loggedInUser', JSON.stringify(user));
+               
+                 
                 if (user.role && user.role.length > 0) {
                     // Redirect user based on their role
                     if (user.role.includes('Patient')) {
