@@ -7,6 +7,7 @@ import ViewUser from '../Components/ViewUser';
 import Footer from '../Components/Footer';
 import TestForm from '../Components/TestForm';
 import DoctorProfile from '../Components/DoctorProfile';
+import WelcomeMessage from '../Components/WelcomeMessage';
 
 
 const AdminDashboard = () => {
@@ -31,6 +32,7 @@ const AdminDashboard = () => {
     return (
         <div>
             <Header />
+            <WelcomeMessage />
             <Container fluid>
                 <Row>
                     <Col md={3}>

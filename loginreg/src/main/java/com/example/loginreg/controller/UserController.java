@@ -3,6 +3,8 @@ package com.example.loginreg.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +47,14 @@ public class UserController {
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @GetMapping("/userinfo")
+    public ResponseEntity<String> findByUsername(HttpServletRequest request) {
+        
+        String username = request.getUserPrincipal().getName();
+        
+        return ResponseEntity.ok("Welcome " + username);
     }
 
 
