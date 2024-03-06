@@ -23,20 +23,22 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+
+
     @Override
     public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO) {
         String appointmentNumber = AppointmentNumberFactory.generateAppointmentNumber(appointmentDTO.getType());
         LocalDateTime appointmentDateTime = getNextAvailableAppointmentTime();
-
+    
         appointmentDTO.setNumber(appointmentNumber);
         appointmentDTO.setDateTime(appointmentDateTime);
-
+    
         appointmentDTO.setTechnician(null);
         appointmentDTO.setDoctor(null);
-
+    
         Appointment appointment = convertToEntity(appointmentDTO);
         appointmentRepository.save(appointment);
-
+    
         return appointmentDTO;
     }
 
@@ -57,8 +59,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private LocalDateTime getNextAvailableAppointmentTime() {
         LocalDate today = LocalDate.now();
-        LocalTime startTime = LocalTime.of(9, 0);
-        LocalTime endTime = LocalTime.of(17, 0);
+        LocalTime startTime = LocalTime.of(0, 0);
+        LocalTime endTime = LocalTime.of(23, 58);
         LocalDateTime now = LocalDateTime.now();
 
         boolean hasExistingAppointments = appointmentRepository.existsByDateTimeBetween(
