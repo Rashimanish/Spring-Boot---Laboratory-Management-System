@@ -23,27 +23,23 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
-
-
     @Override
     public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO) {
         String appointmentNumber = AppointmentNumberFactory.generateAppointmentNumber(appointmentDTO.getType());
-        LocalDateTime appointmentDateTime = getNextAvailableAppointmentTime();
-    
+        LocalDateTime appointmentDateTime = getNextAvailableAppointmentTime(LocalDate.parse(appointmentDTO.getDate()));
+
         appointmentDTO.setNumber(appointmentNumber);
         appointmentDTO.setDateTime(appointmentDateTime);
-    
-        appointmentDTO.setTechnician(null);
-        appointmentDTO.setDoctor(null);
-    
+
+        // Set other fields as needed
+
         Appointment appointment = convertToEntity(appointmentDTO);
         appointmentRepository.save(appointment);
-    
+
         return appointmentDTO;
     }
 
     @Override
-    // Method to set technician and doctor when patient comes to the hospital
     public void updateAppointmentDetails(String appointmentId, UserDto technician, DoctorDTO doctor) {
         Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
         if (appointment != null) {
@@ -57,33 +53,26 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
     }
 
-    private LocalDateTime getNextAvailableAppointmentTime() {
-        LocalDate today = LocalDate.now();
-        LocalTime startTime = LocalTime.of(0, 0);
-        LocalTime endTime = LocalTime.of(23, 58);
-        LocalDateTime now = LocalDateTime.now();
+    private LocalDateTime getNextAvailableAppointmentTime(LocalDate selectedDate) {
+        LocalTime startTime = LocalTime.of(9, 0);
+        LocalTime endTime = LocalTime.of(17, 0); // Assuming appointments end at 5 PM
 
-        boolean hasExistingAppointments = appointmentRepository.existsByDateTimeBetween(
-            LocalDateTime.of(today, startTime),
-            LocalDateTime.of(today, endTime)
-        );
+        LocalDateTime nextAvailableTime = LocalDateTime.of(selectedDate, startTime);
 
-        if (!hasExistingAppointments) {
-            return now;
+        // Find the next available time slot for the selected date
+        while (nextAvailableTime.isBefore(LocalDateTime.of(selectedDate, endTime))) {
+            boolean isAvailable = !appointmentRepository.existsByDateTime(nextAvailableTime);
+            if (isAvailable) {
+                return nextAvailableTime;
+            }
+            nextAvailableTime = nextAvailableTime.plusMinutes(15); // Check availability every 15 minutes
         }
 
-        LocalDateTime nextAvailableTime = LocalDateTime.of(today, startTime);
-        while (nextAvailableTime.isBefore(now) || nextAvailableTime.toLocalTime().isBefore(startTime)) {
-            nextAvailableTime = nextAvailableTime.plusMinutes(15);
-        }
-
-        if (nextAvailableTime.toLocalTime().isAfter(endTime)) {
-            nextAvailableTime = nextAvailableTime.plusDays(1).withHour(9).withMinute(0);
-        }
-
-        return nextAvailableTime;
+        // No available slot found for the selected date, return null or throw an exception
+        return null;
     }
 
+    
     private Appointment convertToEntity(AppointmentDTO appointmentDTO) {
         Appointment appointment = new Appointment();
         appointment.setId(appointmentDTO.getId());

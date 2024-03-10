@@ -19,12 +19,15 @@ public class AppointmentDTO {
     private String id;
     private String type;
     private String number;
+    private String date;
     private LocalDateTime dateTime;
     private String status;
     private TestDTO test;
     private UserDto user;
     private DoctorDTO doctor;
     private UserDto technician;
+
+    
 
 
 

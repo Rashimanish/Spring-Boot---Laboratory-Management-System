@@ -22,8 +22,10 @@ public class Appointment {
     private String id;
     private String type;
     private String number;
+    private String date;
     private LocalDateTime dateTime;
     private String status;
+
     @DBRef
     private Test test;
     @DBRef

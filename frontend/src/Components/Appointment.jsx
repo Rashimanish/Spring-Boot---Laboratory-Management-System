@@ -43,10 +43,18 @@ function Appointment() {
                 setErrorMessage('Please select a future date for the appointment.');
                 return;
             }
+
+             // Check if the selected date is beyond 30 days from the current date
+        const maxDate = new Date();
+        maxDate.setDate(currentDate.getDate() + 30);
+        if (selectedDate > maxDate) {
+            setErrorMessage('Appointment can be made within 1 month only!!');
+            return;
+        }
     
             const appointmentData = {
                 type: type,
-                date: date,
+                date: selectedDate.toISOString().split('T')[0],
                 selectedTest: selectedTest,
                 userName: userName,
             };
