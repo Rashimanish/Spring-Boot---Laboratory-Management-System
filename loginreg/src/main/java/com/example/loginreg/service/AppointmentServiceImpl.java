@@ -3,25 +3,31 @@ package com.example.loginreg.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.loginreg.dto.AppointmentDTO;
-import com.example.loginreg.dto.DoctorDTO;
-import com.example.loginreg.dto.UserDto;
 import com.example.loginreg.entity.Appointment;
-import com.example.loginreg.entity.Doctor;
-import com.example.loginreg.entity.Test;
-import com.example.loginreg.entity.User;
 import com.example.loginreg.factory.AppointmentNumberFactory;
 import com.example.loginreg.repository.AppointmentRepository;
+
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
+    
+    @Override
+    public List<AppointmentDTO> getAllAppointments() {
+        List<Appointment> appointments = appointmentRepository.findAll();
+        return appointments.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO) {
@@ -30,29 +36,44 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentDTO.setNumber(appointmentNumber);
         appointmentDTO.setDateTime(appointmentDateTime);
-
-        // Set other fields as needed
+        appointmentDTO.setStatus("Active");
+        appointmentDTO.setTechnician("N/A");
+        appointmentDTO.setDoctor("N/A");
 
         Appointment appointment = convertToEntity(appointmentDTO);
         appointmentRepository.save(appointment);
 
         return appointmentDTO;
     }
-
     @Override
-    public void updateAppointmentDetails(String appointmentId, UserDto technician, DoctorDTO doctor) {
+    public void updateAppointmentDetails(String appointmentId, AppointmentDTO updatedAppointment) {
         Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
         if (appointment != null) {
-            if (technician != null) {
-                appointment.setTechnician(convertToUserEntity(technician));
+            if (updatedAppointment.getType() != null) {
+                appointment.setType(updatedAppointment.getType());
             }
-            if (doctor != null) {
-                appointment.setDoctor(convertToDoctorEntity(doctor));
+            if (updatedAppointment.getDateTime() != null) {
+                appointment.setDateTime(updatedAppointment.getDateTime());
             }
+            if (updatedAppointment.getStatus() != null) {
+                appointment.setStatus(updatedAppointment.getStatus());
+            }
+            if (updatedAppointment.getPatientName() != null) {
+                appointment.setPatientName(updatedAppointment.getPatientName());
+            }
+            if (updatedAppointment.getTest() != null) {
+                appointment.setTest(updatedAppointment.getTest());
+            }
+            if (updatedAppointment.getDoctor() != null) {
+                appointment.setDoctor(updatedAppointment.getDoctor());
+            }
+            if (updatedAppointment.getTechnician() != null) {
+                appointment.setTechnician(updatedAppointment.getTechnician());
+            }
+    
             appointmentRepository.save(appointment);
         }
     }
-
     private LocalDateTime getNextAvailableAppointmentTime(LocalDate selectedDate) {
         LocalTime startTime = LocalTime.of(9, 0);
         LocalTime endTime = LocalTime.of(17, 0); // Assuming appointments end at 5 PM
@@ -72,56 +93,47 @@ public class AppointmentServiceImpl implements AppointmentService {
         return null;
     }
 
+    @Override
+    public void cancelAppointment(String appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
+        if (appointment != null) {
+            appointment.setStatus("Canceled");
+            appointmentRepository.save(appointment);
+        }
+    }
+
     
     private Appointment convertToEntity(AppointmentDTO appointmentDTO) {
         Appointment appointment = new Appointment();
         appointment.setId(appointmentDTO.getId());
         appointment.setType(appointmentDTO.getType());
         appointment.setNumber(appointmentDTO.getNumber());
-        appointment.setDateTime(appointmentDTO.getDateTime()); // Set the combined date and time
+        appointment.setDateTime(appointmentDTO.getDateTime()); 
         appointment.setStatus(appointmentDTO.getStatus());
-
-        if (appointmentDTO.getUser() != null) {
-            User user = new User();
-            user.setId(appointmentDTO.getUser().getId());
-            appointment.setUser(user);
-        }
-
-        if (appointmentDTO.getTest() != null) {
-            Test test = new Test();
-            test.setId(appointmentDTO.getTest().getId());
-            appointment.setTest(test);
-        }
-
-        if (appointmentDTO.getDoctor() != null) {
-            Doctor doctor = new Doctor();
-            doctor.setId(appointmentDTO.getDoctor().getId());
-            appointment.setDoctor(doctor);
-        }
-
-        if (appointmentDTO.getTechnician() != null) {
-            User technician = new User();
-            technician.setId(appointmentDTO.getTechnician().getId());
-            appointment.setTechnician(technician);
-        }
+        appointment.setPatientName(appointmentDTO.getPatientName());
+        appointment.setTest(appointmentDTO.getTest());
+        appointment.setDoctor(appointmentDTO.getDoctor());
+        appointment.setTechnician(appointmentDTO.getTechnician());
 
         return appointment;
     }
 
-    private User convertToUserEntity(UserDto userDto) {
-        User user = new User();
-        user.setId(userDto.getId());
-        user.setName(userDto.getName());
-       
-        return user;
+
+     private AppointmentDTO convertToDTO(Appointment appointment) {
+        AppointmentDTO dto = new AppointmentDTO();
+        dto.setId(appointment.getId());
+        dto.setType(appointment.getType());
+        dto.setNumber(appointment.getNumber());
+        dto.setDateTime(appointment.getDateTime());
+        dto.setStatus(appointment.getStatus());
+        dto.setPatientName(appointment.getPatientName());
+        dto.setTest(appointment.getTest());
+        dto.setDoctor(appointment.getDoctor());
+        dto.setTechnician(appointment.getTechnician());
+        
+
+        return dto;
     }
 
-    private Doctor convertToDoctorEntity(DoctorDTO doctorDto) {
-        Doctor doctor = new Doctor();
-        doctor.setId(doctorDto.getId());
-        doctor.setName(doctorDto.getName());
-        doctor.setSpecialization(doctorDto.getSpecialization());
-        
-        return doctor;
-    }
+
 }

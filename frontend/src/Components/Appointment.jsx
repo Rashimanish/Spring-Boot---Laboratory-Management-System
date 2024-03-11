@@ -4,11 +4,11 @@ import axios from 'axios';
 import './component.css';
 
 function Appointment() {
-    const [type, setType] = useState('');
+    const [type, setType] = useState('emergency');
     const [date, setDate] = useState('');
     const [tests, setTests] = useState([]);
-    const [selectedTest, setSelectedTest] = useState('');
-    const [userName, setUserName] = useState('');
+    const [test, setTest] = useState('');
+    const [patientName, setpatientName] = useState('');
     const [appointmentNumber, setAppointmentNumber] = useState('');
     const [appointmentTime, setAppointmentTime] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -18,7 +18,7 @@ function Appointment() {
         fetchTests();
         const user = JSON.parse(localStorage.getItem('loggedInUser'));
         if (user && user.name) {
-            setUserName(user.name);
+            setpatientName(user.name);
         }
     }, []);
 
@@ -55,8 +55,8 @@ function Appointment() {
             const appointmentData = {
                 type: type,
                 date: selectedDate.toISOString().split('T')[0],
-                selectedTest: selectedTest,
-                userName: userName,
+                test: test,
+                patientName: patientName
             };
     
             const response = await axios.post('http://localhost:8084/api/appointment/create', appointmentData);
@@ -86,11 +86,10 @@ function Appointment() {
                     <Form.Control type="date" value={date} onChange={(e) => setDate(e.target.value)} />
                 </FormGroup>
                 <FormGroup>
-                    <Form.Label>Tests:</Form.Label>
-                    <Form.Control as="select" value={selectedTest} onChange={(e) => setSelectedTest(e.target.value)}>
-                        <option value="">Select Test</option>
-                        {tests.map(test => (
-                            <option key={test.id} value={test.id}>{test.testName}</option>
+                    <Form.Label>Test:</Form.Label>
+                    <Form.Control as="select" value={test} onChange={(e) => setTest(e.target.value)}>
+                        {tests.map(testItem => (
+                            <option key={testItem.id} value={testItem.testName}>{testItem.testName}</option>
                         ))}
                     </Form.Control>
                 </FormGroup>

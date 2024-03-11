@@ -83,6 +83,12 @@ public class UserServiceImpl implements UserService {
         return user != null && user.getPassword().equals(password);
     }
 
+    @Override
+    public List<UserDto> findUsersByRole(String role) {
+    List<User> users = userRepository.findByRole(role);
+    return users.stream().map(this::mapToUserDto).collect(Collectors.toList());
+}
+
 
     private UserDto mapToUserDto(User user) {
         UserDto userDto = new UserDto();

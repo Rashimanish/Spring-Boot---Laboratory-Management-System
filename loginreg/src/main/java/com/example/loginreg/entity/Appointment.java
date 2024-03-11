@@ -2,10 +2,7 @@ package com.example.loginreg.entity;
 
 
 import java.time.LocalDateTime;
-
-
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -25,13 +22,8 @@ public class Appointment {
     private String date;
     private LocalDateTime dateTime;
     private String status;
-
-    @DBRef
-    private Test test;
-    @DBRef
-    private User user;
-    @DBRef
-    private Doctor doctor;
-    @DBRef
-    private User technician;
+    private String patientName;
+    private String test;
+    private String doctor;
+    private String technician;
 }

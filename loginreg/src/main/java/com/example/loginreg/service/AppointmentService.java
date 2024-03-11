@@ -1,16 +1,19 @@
 package com.example.loginreg.service;
 
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.loginreg.dto.AppointmentDTO;
-import com.example.loginreg.dto.DoctorDTO;
-import com.example.loginreg.dto.UserDto;
+
 
 @Service
 public interface AppointmentService {
+    List<AppointmentDTO> getAllAppointments();
     AppointmentDTO createAppointment(AppointmentDTO appointmentDTO);
-    void updateAppointmentDetails(String appointmentId, UserDto technician, DoctorDTO doctor);
+    void updateAppointmentDetails(String appointmentId, AppointmentDTO updatedAppointment);
+    public void cancelAppointment(String appointmentId);
 
     
 } 

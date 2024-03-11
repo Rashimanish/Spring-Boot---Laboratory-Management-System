@@ -22,10 +22,10 @@ public class AppointmentDTO {
     private String date;
     private LocalDateTime dateTime;
     private String status;
-    private TestDTO test;
-    private UserDto user;
-    private DoctorDTO doctor;
-    private UserDto technician;
+    private String patientName;
+    private String test;
+    private String doctor;
+    private String technician;
 
     
 

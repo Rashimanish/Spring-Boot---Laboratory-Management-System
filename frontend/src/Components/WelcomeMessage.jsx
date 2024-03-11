@@ -6,7 +6,7 @@ const WelcomeMessage = () => {
 
     return (
         <div className='welcomecontainer'>
-            <h2 className='welcomemsg'>Welcome, {loggedInUser.username}!</h2>
+            <h2 className='welcomemsg'>Welcome, {loggedInUser ? loggedInUser.name : 'User'}!</h2>
         </div>
     );
 };
