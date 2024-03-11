@@ -8,6 +8,8 @@ import Footer from '../Components/Footer';
 import TestForm from '../Components/TestForm';
 import DoctorProfile from '../Components/DoctorProfile';
 import WelcomeMessage from '../Components/WelcomeMessage';
+import Appointment from '../Components/Appointment';
+import ViewAppointment from '../Components/ViewAppointment';
 
 
 const AdminDashboard = () => {
@@ -24,6 +26,10 @@ const AdminDashboard = () => {
                return <TestForm />;
             case 'doctorProfile':
                 return <DoctorProfile />
+            case 'makeAppointment':
+                return <Appointment />
+            case 'viewAppointment':
+                return <ViewAppointment />
             // Add cases for other components
             default:
                 return null;
@@ -41,6 +47,9 @@ const AdminDashboard = () => {
                             <Nav.Link href="/admin/addUser">Add User</Nav.Link>
                             <Nav.Link href="/admin/addTest">Create test</Nav.Link>
                             <Nav.Link href="/admin/doctorProfile">Manage Doctor Profile</Nav.Link>
+                            <Nav.Link href="/admin/makeAppointment">Make Appointment</Nav.Link>
+                            <Nav.Link href="/admin/viewAppointment">View Appointment</Nav.Link>
+
                             {/* Add other Nav links as needed */}
                         </Nav>
                     </Col>

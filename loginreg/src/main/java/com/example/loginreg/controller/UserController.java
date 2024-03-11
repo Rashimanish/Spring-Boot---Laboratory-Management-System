@@ -83,4 +83,10 @@ public class UserController {
                     .body("User deletion failed: " + e.getMessage());
         }
     }
+
+    @GetMapping("/getTechnicians")
+    public List<UserDto> getTechnicians() {
+    return userService.findUsersByRole("Technician");
+    }
+
 }

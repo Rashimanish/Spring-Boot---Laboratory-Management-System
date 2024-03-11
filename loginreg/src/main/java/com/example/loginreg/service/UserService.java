@@ -10,6 +10,7 @@ public interface UserService {
     UserDto findByUsername(String username);
     List<UserDto> findAllUsers();
     UserDto findUserById(String id);
+    List<UserDto> findUsersByRole(String role);
     UserDto updateUser(String id, UserDto userDto);
     void deleteUser(String id);
     boolean authenticateUser(String username, String password);
