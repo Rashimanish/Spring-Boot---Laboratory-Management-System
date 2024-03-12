@@ -53,5 +53,14 @@ public class AppointmentContoller {
         return new ResponseEntity<>("Appointment canceled successfully", HttpStatus.OK);
     }
 
+    @GetMapping("/viewByUser/{username}")
+    public ResponseEntity<List<AppointmentDTO>> getAppointmentsByUser(@PathVariable String username) {
+    List<AppointmentDTO> appointments = appointmentService.getAppointmentsByUser(username);
+    if (appointments.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(appointments, HttpStatus.OK);
+}
+
     
 }

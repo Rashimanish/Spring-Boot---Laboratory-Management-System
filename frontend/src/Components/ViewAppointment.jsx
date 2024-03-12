@@ -5,7 +5,7 @@ import axios from 'axios';
 function ViewAppointment() {
     const [appointments, setAppointments] = useState([]);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
-    const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [showTestResultModal, setShowTestResultModal] = useState(false);
     const [filteredAppointments, setFilteredAppointments] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [updateAppointment, setUpdateAppointment] = useState({
@@ -19,6 +19,20 @@ function ViewAppointment() {
     const [tests, setTests] = useState([]);
     const [technicians, setTechnicians] = useState([]);
     const [doctors, setDoctors] = useState([]);
+
+    const [testResultData, setTestResultData] = useState({
+        appointmentId: '',
+        appointmentType: '',
+        appointmentNumber: '',
+        appointmentDateTime: '',
+        patientName: '',
+        testName: '',
+        technician: '',
+        testRange: '',
+        remark: '',
+        description: ''
+    });
+
 
     useEffect(() => {
         fetchAppointments();
@@ -94,6 +108,18 @@ function ViewAppointment() {
         }
     };
 
+    const handleTestResultSubmission = async () => {
+        try {
+
+            await axios.post('http://localhost:8084/api/result/create', testResultData);
+
+            handleCloseTestResultModal();
+        } catch (error) {
+            console.error('Error submitting test result:', error);
+        }
+    };
+
+
     const handleCloseUpdateModal = () => {
         setShowUpdateModal(false);
     };
@@ -110,13 +136,27 @@ function ViewAppointment() {
         setShowUpdateModal(true);
     };
 
-    const handleClosePaymentModal = () => {
-        setShowPaymentModal(false);
+    const handleCloseTestResultModal = () => {
+        setShowTestResultModal(false);
     };
 
-    const handleShowPaymentModal = () => {
-        setShowPaymentModal(true);
+    const handleShowTestResultModal = (appointmentId) => {
+        const selectedAppointment = appointments.find(appointment => appointment.id === appointmentId);
+        setTestResultData({
+            appointmentId: selectedAppointment.id,
+            appointmentType: selectedAppointment.type,
+            appointmentNumber: selectedAppointment.number,
+            appointmentDateTime: selectedAppointment.dateTime,
+            patientName: selectedAppointment.patientName,
+            testName: selectedAppointment.test,
+            technician: selectedAppointment.technician,
+            testRange: '',
+            remark: '',
+            description: ''
+        });
+        setShowTestResultModal(true);
     };
+
 
     function formatDate(dateTime) {
         const date = new Date(dateTime);
@@ -194,9 +234,9 @@ function ViewAppointment() {
                                 <td>{appointment.doctor}</td>
                                 <td>{appointment.status}</td>
                                 <td>
-                                    <Button variant="success" onClick={handleShowPaymentModal}>Make Payment</Button>{' '}
                                     <Button variant="primary" onClick={() => handleShowUpdateModal(appointment.id)}>Update</Button>
                                     <Button variant="danger" onClick={() => handleCancelAppointment(appointment.id)}>Cancel</Button>
+                                    <Button variant="info" onClick={() => handleShowTestResultModal(appointment.id)}>Test Result</Button>
                                 </td>
                             </tr>
                         ))}
@@ -249,23 +289,33 @@ function ViewAppointment() {
                     <Button variant="primary" onClick={handleUpdateAppointment}>Save Changes</Button>
                 </Modal.Footer>
             </Modal>
-
-            {/* Modal for Making Payment */}
-            <Modal show={showPaymentModal} onHide={handleClosePaymentModal}>
+{/* Modal for Test Result */}
+<Modal show={showTestResultModal} onHide={handleCloseTestResultModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Make Payment</Modal.Title>
+                    <Modal.Title>Test Result</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* Add payment form here */}
                     <Form>
-                        {/* Payment form fields */}
+                        <Form.Group controlId="testRange">
+                            <Form.Label>Test Range</Form.Label>
+                            <Form.Control type="text" value={testResultData.testRange} onChange={(e) => setTestResultData({ ...testResultData, testRange: e.target.value })} />
+                        </Form.Group>
+                        <Form.Group controlId="remark">
+                            <Form.Label>Remark</Form.Label>
+                            <Form.Control type="text" value={testResultData.remark} onChange={(e) => setTestResultData({ ...testResultData, remark: e.target.value })} />
+                        </Form.Group>
+                        <Form.Group controlId="description">
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control as="textarea" rows={3} value={testResultData.description} onChange={(e) => setTestResultData({ ...testResultData, description: e.target.value })} />
+                        </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClosePaymentModal}>Close</Button>
-                    <Button variant="primary">Save Changes</Button>
+                    <Button variant="secondary" onClick={handleCloseTestResultModal}>Close</Button>
+                    <Button variant="primary" onClick={handleTestResultSubmission}>Submit</Button>
                 </Modal.Footer>
             </Modal>
+
         </Container>
     );
 }

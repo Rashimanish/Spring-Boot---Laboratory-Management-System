@@ -102,6 +102,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
     }
 
+    @Override
+    public List<AppointmentDTO> getAppointmentsByUser(String username) {
+    List<Appointment> appointments = appointmentRepository.findByPatientName(username);
+    return appointments.stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+}
+
     
     private Appointment convertToEntity(AppointmentDTO appointmentDTO) {
         Appointment appointment = new Appointment();

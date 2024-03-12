@@ -30,7 +30,7 @@ const LoginForm = () => {
                 if (user.role && user.role.length > 0) {
                     // Redirect user based on their role
                     if (user.role.includes('Patient')) {
-                        navigate('/PatientDashboard');
+                        navigate('/patient');
                     } else if (user.role.includes('ROLE_ADMIN')) {
                         navigate('/admin');
                     } else if (user.role.includes('Technician')) {
