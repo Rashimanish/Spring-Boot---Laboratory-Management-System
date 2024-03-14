@@ -76,5 +76,11 @@ public class TestServiceImpl implements TestService{
             return String.format("T%03d", nextNumber);
         }
     }
+
+    @Override
+    public double getTestPriceByName(String testName) {
+        Test test = testRepository.findByTestName(testName);
+        return test != null ? test.getPrice() : 0; 
+    }
     
 }

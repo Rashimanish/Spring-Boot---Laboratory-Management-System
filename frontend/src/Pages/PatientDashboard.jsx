@@ -8,6 +8,7 @@ import MyAppointments from '../Components/MyAppointments';
 import Footer from '../Components/Footer';
 import MyTestResult from '../Components/MyTestResult';
 
+
 const PatientDashboard = () => {
     const { selectedItem } = useParams();
 
@@ -16,7 +17,8 @@ const PatientDashboard = () => {
             case 'makeAppointment':
                 return <Appointment />;
             case 'viewMyAppointment':
-                return <MyAppointments />;
+                return  <MyAppointments />;
+              
             case 'viewMyResult':
                 return <MyTestResult />;
             default:

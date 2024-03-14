@@ -15,11 +15,17 @@ import com.example.loginreg.factory.AppointmentNumberFactory;
 import com.example.loginreg.repository.AppointmentRepository;
 
 
+
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private TestService testService;
+
+
     
     @Override
     public List<AppointmentDTO> getAllAppointments() {
@@ -34,11 +40,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         String appointmentNumber = AppointmentNumberFactory.generateAppointmentNumber(appointmentDTO.getType());
         LocalDateTime appointmentDateTime = getNextAvailableAppointmentTime(LocalDate.parse(appointmentDTO.getDate()));
 
+        double testPrice = testService.getTestPriceByName(appointmentDTO.getTest());
+
         appointmentDTO.setNumber(appointmentNumber);
         appointmentDTO.setDateTime(appointmentDateTime);
         appointmentDTO.setStatus("Active");
         appointmentDTO.setTechnician("N/A");
         appointmentDTO.setDoctor("N/A");
+        appointmentDTO.setTestPrice(testPrice);
 
         Appointment appointment = convertToEntity(appointmentDTO);
         appointmentRepository.save(appointment);
@@ -63,6 +72,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             }
             if (updatedAppointment.getTest() != null) {
                 appointment.setTest(updatedAppointment.getTest());
+            }
+            if (updatedAppointment.getTestPrice() != 0) {
+                appointment.setTestPrice(updatedAppointment.getTestPrice());
             }
             if (updatedAppointment.getDoctor() != null) {
                 appointment.setDoctor(updatedAppointment.getDoctor());
@@ -120,6 +132,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setStatus(appointmentDTO.getStatus());
         appointment.setPatientName(appointmentDTO.getPatientName());
         appointment.setTest(appointmentDTO.getTest());
+        appointment.setTestPrice(appointmentDTO.getTestPrice());
         appointment.setDoctor(appointmentDTO.getDoctor());
         appointment.setTechnician(appointmentDTO.getTechnician());
 
@@ -136,6 +149,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         dto.setStatus(appointment.getStatus());
         dto.setPatientName(appointment.getPatientName());
         dto.setTest(appointment.getTest());
+        dto.setTestPrice(appointment.getTestPrice());
         dto.setDoctor(appointment.getDoctor());
         dto.setTechnician(appointment.getTechnician());
         
