@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-pdf/renderer": "^3.3.8",
     "@stripe/react-stripe-js": "^2.6.0",
     "@stripe/stripe-js": "^3.0.8",
     "@testing-library/jest-dom": "^5.17.0",
@@ -10,6 +11,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
+    "html-to-pdf": "^0.1.11",
     "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",

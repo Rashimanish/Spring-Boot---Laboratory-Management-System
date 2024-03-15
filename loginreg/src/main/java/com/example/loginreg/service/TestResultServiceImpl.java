@@ -1,6 +1,7 @@
 package com.example.loginreg.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,11 @@ public class TestResultServiceImpl implements TestResultService{
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Optional<TestResult> getTestResultById(String id) {
+    return testResultRepository.findById(id);
+}
 
     private TestResult convertToEntity(TestResultDTO testResultDTO) {
         TestResult testResult = new TestResult();
