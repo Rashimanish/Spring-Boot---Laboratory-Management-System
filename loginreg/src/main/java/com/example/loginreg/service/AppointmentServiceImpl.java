@@ -123,6 +123,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 }
 
     @Override
+    public List <AppointmentDTO>getAppointmentTech(String username){
+        List<Appointment> appointments = appointmentRepository.findByTechnician(username);
+        return appointments.stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+    }
+
+    @Override
     public AppointmentDTO getAppointmentById(String appointmentId) {
     Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
     if (appointment != null) {

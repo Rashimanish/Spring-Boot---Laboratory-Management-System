@@ -42,5 +42,14 @@ public class TestResultController {
         }
         return new ResponseEntity<>(testResults, HttpStatus.OK);
     }
+
+    @GetMapping("/viewByTechnician/{username}")
+    public ResponseEntity<List<TestResultDTO>> getTestResultsTechnician(@PathVariable String username) {
+        List<TestResultDTO> testResults = testResultService.getTestResultsTechnician(username);
+        if (testResults.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(testResults, HttpStatus.OK);
+    }
     
 }

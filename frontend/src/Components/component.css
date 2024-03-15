@@ -1,25 +1,60 @@
 .header-container {
-    background-color: #ffffff;
+  background: linear-gradient(to right, #4b6cb7, #182848); 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-    padding: 10px 20px; 
+    padding: 10px; 
+    margin: 10px;
+
 }
 
 .navbar-brand {
+   font-size: 24px; 
+    font-weight: bold; 
+    color: rgb(255, 255, 255);
+    
+
+   
+}
+
+.sidebar-container {
+    background-color: #f0f8ff;
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 20px; 
+}
+
+.sidebar-link {
+    color: #333; 
+    font-size: 16px; 
+    text-decoration: none; 
+    display: block; 
+    padding: 10px 20px; 
+    transition: background-color 0.3s, box-shadow 0.3s; 
+}
+
+.sidebar-link:hover {
+    background-color: #add8e6; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
+
+.dashboard-heading {
     font-size: 24px; 
     font-weight: bold; 
-    color: #333333;
+    color: #333; 
+    text-transform: uppercase; 
+    margin-bottom: 20px; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
 }
 
 .welcomecontainer {
     background-color: #f0f0f0;
     padding: 10px;
-    margin-bottom: 20px;
+    margin: 20px;
     border-radius: 5px;
     text-align: center; 
 }
 
 .welcomemsg {
-    color: blue; 
+    color: rgb(114, 41, 177); 
     font-size: 24px;
     font-weight: bold;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -81,21 +116,28 @@
     background-color: #45a049; 
 }
 
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .footer {
-    position: static; 
-    bottom: 0;
-    width: 100%;
+    margin-top: auto;
     background-color: #333;
     color: #fff;
     text-align: center;
     padding: 10px 0;
 }
 
+
+
 .table {
     width: 100%;
     max-width: 100%;
     margin-bottom: 1rem;
     background-color: transparent;
+    margin-top: 20px;
 }
 
 .table th,
@@ -162,5 +204,14 @@
     background-color: #9fcdff;
 }
 
+.logout-button {
+    background: linear-gradient(to right, #6a11cb, #2575fc); 
+    border: none;
+    margin-left: auto;
+  }
+  
+  .logout-button:hover {
+    background: linear-gradient(to right, #5a0eaa, #1a63d7); 
+  }
 
 

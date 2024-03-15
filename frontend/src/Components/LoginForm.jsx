@@ -34,7 +34,7 @@ const LoginForm = () => {
                     } else if (user.role.includes('ROLE_ADMIN')) {
                         navigate('/admin');
                     } else if (user.role.includes('Technician')) {
-                        navigate('/TechnicianDashboard');
+                        navigate('/technician');
                     } else {
                         setError('Invalid user role');
                     }

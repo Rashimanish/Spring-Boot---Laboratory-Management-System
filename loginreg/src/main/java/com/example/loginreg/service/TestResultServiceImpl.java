@@ -50,6 +50,16 @@ public class TestResultServiceImpl implements TestResultService{
                 .collect(Collectors.toList());
     }
 
+    
+
+    @Override
+    public List<TestResultDTO> getTestResultsTechnician(String username) {
+        List<TestResult> testResults = testResultRepository.findByTechnician(username);
+        return testResults.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public Optional<TestResult> getTestResultById(String id) {
     return testResultRepository.findById(id);

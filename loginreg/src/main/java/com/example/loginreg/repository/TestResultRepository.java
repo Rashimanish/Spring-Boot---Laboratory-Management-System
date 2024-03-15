@@ -10,5 +10,6 @@ import com.example.loginreg.entity.TestResult;
 @Repository
 public interface TestResultRepository extends MongoRepository<TestResult, String> {
     List<TestResult> findByPatientName(String username);
+    List<TestResult> findByTechnician (String username);
     
 }

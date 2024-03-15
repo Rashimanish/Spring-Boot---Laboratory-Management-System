@@ -62,5 +62,13 @@ public class AppointmentContoller {
     return new ResponseEntity<>(appointments, HttpStatus.OK);
 }
 
+    @GetMapping("/viewByTechnician/{username}")
+    public ResponseEntity<List<AppointmentDTO>> getAppointmentTech(@PathVariable String username) {
+    List<AppointmentDTO> appointments = appointmentService.getAppointmentTech(username);
+    if (appointments.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(appointments, HttpStatus.OK);
+}
     
 }

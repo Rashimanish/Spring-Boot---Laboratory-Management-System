@@ -33,32 +33,29 @@ const AdminDashboard = () => {
                 return <ViewAppointment />
             case 'viewResults' :
                 return <TestResults />
-            // Add cases for other components
             default:
                 return null;
         }
     };
     return (
-        <div>
+        <div className="dashboard-container">
             <Header />
             <WelcomeMessage />
-            <Container fluid>
+            <Container fluid style={{ flex: '1' }}>
                 <Row>
                     <Col md={3}>
-                        <Nav defaultActiveKey="/admin/viewUser" className="flex-column">
-                            <Nav.Link href="/admin/viewUser">View User</Nav.Link>
-                            <Nav.Link href="/admin/addUser">Add User</Nav.Link>
-                            <Nav.Link href="/admin/addTest">Create test</Nav.Link>
-                            <Nav.Link href="/admin/doctorProfile">Manage Doctor Profile</Nav.Link>
-                            <Nav.Link href="/admin/makeAppointment">Make Appointment</Nav.Link>
-                            <Nav.Link href="/admin/viewAppointment">View Appointment</Nav.Link>
-                            <Nav.Link href="/admin/viewResults">View Test Results</Nav.Link>
-
-                            {/* Add other Nav links as needed */}
+                        <Nav defaultActiveKey="/admin/viewUser" className="sidebar-container flex-column">
+                            <Nav.Link href="/admin/viewUser" className="sidebar-link">View User</Nav.Link>
+                            <Nav.Link href="/admin/addUser" className="sidebar-link">Add User</Nav.Link>
+                            <Nav.Link href="/admin/addTest" className="sidebar-link">Create test</Nav.Link>
+                            <Nav.Link href="/admin/doctorProfile" className="sidebar-link">Manage Doctor Profile</Nav.Link>
+                            <Nav.Link href="/admin/makeAppointment" className="sidebar-link">Make Appointment</Nav.Link>
+                            <Nav.Link href="/admin/viewAppointment" className="sidebar-link">View Appointments</Nav.Link>
+                            <Nav.Link href="/admin/viewResults" className="sidebar-link">View Test Results</Nav.Link>
                         </Nav>
                     </Col>
                     <Col md={9}>
-                        <h2>Admin Dashboard</h2>
+    { selectedItem ? null : <h2 className="dashboard-heading">Admin Dashboard</h2>}
                         {renderComponent()}
                     </Col>
                 </Row>

@@ -15,6 +15,7 @@ public interface AppointmentService {
     void updateAppointmentDetails(String appointmentId, AppointmentDTO updatedAppointment);
     public void cancelAppointment(String appointmentId);
     List<AppointmentDTO> getAppointmentsByUser(String username);
+    List <AppointmentDTO>getAppointmentTech(String username);
     AppointmentDTO getAppointmentById(String appointmentId);
 
     

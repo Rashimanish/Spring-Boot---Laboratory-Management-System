@@ -13,6 +13,7 @@ public interface TestResultService {
     TestResultDTO createTestResult(TestResultDTO testResultDTO);
     List<TestResultDTO> getAllTestResults();
     List<TestResultDTO> getTestResultsByUser(String username);
+    List<TestResultDTO> getTestResultsTechnician(String username);
     Optional<TestResult> getTestResultById(String id);
     
 }

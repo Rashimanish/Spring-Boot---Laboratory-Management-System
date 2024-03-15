@@ -27,20 +27,20 @@ const PatientDashboard = () => {
     };
 
     return (
-        <div>
+        <div className="dashboard-container">
             <Header />
             <WelcomeMessage />
-            <Container fluid>
+            <Container fluid style={{ flex: '1' }}>
                 <Row>
                     <Col md={3}>
-                        <Nav defaultActiveKey="/patient/makeAppointment" className="flex-column">
-                            <Nav.Link href="/patient/makeAppointment">Make Appointment</Nav.Link>
-                            <Nav.Link href="/patient/viewMyAppointment">View My Appointments</Nav.Link>
+                        <Nav defaultActiveKey="/patient/makeAppointment" className="sidebar-container flex-column">
+                            <Nav.Link href="/patient/makeAppointment" className="sidebar-link">Make Appointment</Nav.Link>
+                            <Nav.Link href="/patient/viewMyAppointment" className="sidebar-link">View My Appointments</Nav.Link>
                             <Nav.Link href="/patient/viewMyResult">View My Test Results</Nav.Link>
                         </Nav>
                     </Col>
                     <Col md={9}>
-                        <h2>Patient Dashboard</h2>
+    { selectedItem ? null : <h2 className="dashboard-heading">Patient Dashboard</h2>}
                         {renderComponent()}
                     </Col>
                 </Row>
