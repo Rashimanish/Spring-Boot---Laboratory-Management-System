@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
-import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
+import { Document, Page, Text, View, PDFDownloadLink } from '@react-pdf/renderer';
 
 const MyTestResult = () => {
     const [testResults, setTestResults] = useState([]);
     const [searchKeyword, setSearchKeyword] = useState('');
-    const [selectedTestResult, setSelectedTestResult] = useState(null); // State to store selected test result
-    const [pdfVisible, setPdfVisible] = useState(false); // State to control PDF visibility
 
     useEffect(() => {
         fetchTestResults();
@@ -39,9 +37,50 @@ const MyTestResult = () => {
         setSearchKeyword(e.target.value);
     };
 
-    const handleDownloadReport = (testResult) => {
-        setSelectedTestResult(testResult); // Set the selected test result
-        setPdfVisible(true); // Show PDF viewer
+    const styles = {
+        section: {
+            marginBottom: '20px',
+        },
+        header: {
+            marginBottom: '20px',
+            textAlign: 'center',
+        },
+        labName: {
+            fontSize: '20px',
+            fontWeight: '500',
+            marginBottom: '10px',
+            color: 'white',
+            backgroundColor: '#34495e',
+            padding: '10px',
+        },
+        blueLine: {
+            width: '100%',
+            borderBottom: '3px solid #34495e',
+            margin: '20px auto',
+            marginBottom: '5px'
+        },
+        greyBox: {
+            backgroundColor: '#f2f2f2',
+            padding: '20px',
+            borderRadius: '5px',
+            marginBottom: '10px',
+        },
+        title: {
+            fontSize: '20px',
+            fontWeight: 'bold',
+            marginBottom: '10px',
+            color: '#34495e',
+            textAlign: 'center',
+        },
+        row: {
+            marginBottom: '10px',
+            textAlign: 'center',
+        },
+        label: {
+            fontWeight: 'bold',
+            marginRight: '10px',
+            color: '#555',
+        },
     };
 
     return (
@@ -88,48 +127,89 @@ const MyTestResult = () => {
                                 <td>{testResult.remark}</td>
                                 <td>{testResult.description}</td>
                                 <td>
-                                    <Button
-                                        variant="primary"
-                                        onClick={() => handleDownloadReport(testResult)}
+                                    <PDFDownloadLink
+                                        document={
+                                            <Document>
+                                                <Page size="A4">
+                                                    <View style={styles.section}>
+                                                        {/* Header with Lab Details */}
+                                                        <View style={styles.header}>
+                                                            <Text style={styles.labName}>ABC Laboratories</Text>
+                                                            <Text>No. Roswell Road, Colombo 5</Text>
+                                                            <Text>Contact: 0112331874</Text>
+                                                            <View style={styles.blueLine} />
+                                                        </View>
+
+                                                        {/* Test Details */}
+                                                        <View style={styles.greyBox}>
+                                                            <Text style={styles.title}>Test Details</Text>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Appointment ID:</Text>
+                                                                <Text>{testResult.appointmentId}</Text>
+                                                            </View>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Appointment Type:</Text>
+                                                                <Text>{testResult.appointmentType}</Text>
+                                                            </View>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Appointment Number:</Text>
+                                                                <Text>{testResult.appointmentNumber}</Text>
+                                                            </View>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Appointment DateTime:</Text>
+                                                                <Text>{formatDate(testResult.appointmentDateTime)} {formatTime(testResult.appointmentDateTime)}</Text>
+                                                            </View>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Patient Name:</Text>
+                                                                <Text>{testResult.patientName}</Text>
+                                                            </View>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Technician:</Text>
+                                                                <Text>{testResult.technician}</Text>
+                                                            </View>
+                                                        </View>
+
+                                                        {/* Test Result */}
+                                                        <View style={styles.greyBox}>
+                                                            <Text style={styles.title}>Test Result</Text>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Test Name:</Text>
+                                                                <Text>{testResult.testName}</Text>
+                                                            </View>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Test Code:</Text>
+                                                                <Text>{testResult.testCode}</Text>
+                                                            </View>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Test Range:</Text>
+                                                                <Text>{testResult.testRange}</Text>
+                                                            </View>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Remark:</Text>
+                                                                <Text>{testResult.remark}</Text>
+                                                            </View>
+                                                            <View style={styles.row}>
+                                                                <Text style={styles.label}>Description:</Text>
+                                                                <Text>{testResult.description}</Text>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                </Page>
+                                            </Document>
+                                        }
+                                        fileName="testReport.pdf"
                                     >
-                                        Download Report
-                                    </Button>
+                                        {({ blob, url, loading, error }) =>
+                                            loading ? 'Loading document...' : (
+                                                <Button variant="primary">Download Report</Button>
+                                            )
+                                        }
+                                    </PDFDownloadLink>
                                 </td>
                             </tr>
                         ))}
                 </tbody>
             </Table>
-            {pdfVisible && selectedTestResult && (
-                <PDFViewer style={{ width: '100%', height: '500px' }}>
-                    <Document>
-                        <Page size="A4">
-                            {/* Render PDF content for the selected test result */}
-                            <View>
-                                <Text>Test Name: {selectedTestResult.testName}</Text>
-                                <Text>Test Code: {selectedTestResult.testCode}</Text>
-                                <Text>Test Range: {selectedTestResult.testRange}</Text>
-                                <Text>Remark: {selectedTestResult.remark}</Text>
-                                <View style={{ borderBottom: '2px solid blue', marginVertical: 10 }} />
-                                <View style={{ flexDirection: 'row' }}>
-                                    <View style={{ width: '50%' }}>
-                                        <Text>Appointment ID: {selectedTestResult.appointmentId}</Text>
-                                        <Text>Appointment Type: {selectedTestResult.appointmentType}</Text>
-                                        <Text>Appointment Number: {selectedTestResult.appointmentNumber}</Text>
-                                        <Text>
-                                            Appointment DateTime: {formatDate(selectedTestResult.appointmentDateTime)}{' '}
-                                            {formatTime(selectedTestResult.appointmentDateTime)}
-                                        </Text>
-                                    </View>
-                                    <View style={{ width: '50%' }}>
-                                        <Text>Patient Name: {selectedTestResult.patientName}</Text>
-                                        <Text>Technician: {selectedTestResult.technician}</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        </Page>
-                    </Document>
-                </PDFViewer>
-            )}
         </Container>
     );
 };

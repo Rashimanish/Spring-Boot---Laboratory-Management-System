@@ -58,14 +58,22 @@ function MyAppointments() {
     async function handleToken(token) {
         try {
             setLoading(true); // Set loading to true before processing payment
-
-            const response = await axios.post('http://localhost:8084/api/payment/charge', {
-                token: token.id,
-                amount: selectedAppointment.testPrice * 100,
-            });
-
+    
+            const customToken = generateCustomToken(); // Generate custom token
+        const response = await axios.post('http://localhost:8084/api/payment/save', {
+            token: customToken, // Use custom token instead of Stripe token
+            amount: selectedAppointment.testPrice * 100,
+            appointmentId: selectedAppointment.id
+        }, {
+            headers: {
+                'token': customToken, // Include the 'token' header
+                'amount': selectedAppointment.testPrice * 100,
+                'appointmentId' : selectedAppointment.id
+            }
+        });
+    
             console.log('Payment response:', response.data);
-
+    
             // Handle success or failure
             handleClosePaymentModal();
         } catch (error) {
@@ -74,6 +82,13 @@ function MyAppointments() {
         } finally {
             setLoading(false); // Set loading back to false after processing payment
         }
+    }
+
+    // Function to generate custom token
+    function generateCustomToken() {
+        // Implement your custom token generation logic here
+        // For example, you can generate a random string
+        return Math.random().toString(36).substr(2); // Generate a random alphanumeric string
     }
 
     return (
@@ -126,29 +141,3 @@ function MyAppointments() {
 }
 
 export default MyAppointments;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

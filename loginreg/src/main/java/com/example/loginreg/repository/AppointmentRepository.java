@@ -15,6 +15,8 @@ public interface AppointmentRepository extends MongoRepository <Appointment , St
     boolean existsByDateTimeBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
     boolean existsByDateTime(LocalDateTime nextAvailableTime);
     List<Appointment> findByPatientName(String username);
+   
+    
 }
     
 

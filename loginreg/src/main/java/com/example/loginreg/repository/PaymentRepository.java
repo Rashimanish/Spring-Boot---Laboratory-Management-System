@@ -7,6 +7,6 @@ import com.example.loginreg.entity.Payment;
 
 @Repository
 public interface PaymentRepository extends MongoRepository<Payment, String>{
-    Payment findByAppointmentId(String appointmentId);
+    
 
 }

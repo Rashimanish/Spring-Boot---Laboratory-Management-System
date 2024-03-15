@@ -122,6 +122,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             .collect(Collectors.toList());
 }
 
+    @Override
+    public AppointmentDTO getAppointmentById(String appointmentId) {
+    Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
+    if (appointment != null) {
+        return convertToDTO(appointment);
+    }
+    return null; // Or throw an exception if needed
+    }
     
     private Appointment convertToEntity(AppointmentDTO appointmentDTO) {
         Appointment appointment = new Appointment();
