@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +138,23 @@ public class AppointmentServiceImpl implements AppointmentService {
         return convertToDTO(appointment);
     }
     return null; // Or throw an exception if needed
+    }
+
+    @Override
+    public Map<String, Long> getPeakAppointmentTimes(int year, int month, int date) {
+        LocalDateTime startOfDay = LocalDateTime.of(year, month, date, 0, 0);
+        LocalDateTime endOfDay = startOfDay.plusDays(1).minusSeconds(1);
+
+        List<Appointment> appointments = appointmentRepository.findByDateTimeBetween(startOfDay, endOfDay);
+
+        // Group appointments by hour of day and count the number of appointments in each hour
+        Map<String, Long> peakTimes = appointments.stream()
+                .collect(Collectors.groupingBy(appointment ->
+                                appointment.getDateTime().getHour() + ":00 - " +
+                                        appointment.getDateTime().plusHours(1).getHour() + ":00",
+                        Collectors.counting()));
+
+        return peakTimes;
     }
     
     private Appointment convertToEntity(AppointmentDTO appointmentDTO) {

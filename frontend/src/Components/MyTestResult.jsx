@@ -16,7 +16,7 @@ const MyTestResult = () => {
             const user = JSON.parse(localStorage.getItem('loggedInUser'));
             if (user && user.name) {
                 const response = await axios.get(`http://localhost:8084/api/result/viewByUser/${user.name}`);
-                setTestResults(response.data); 
+                setTestResults(response.data);
             }
         } catch (error) {
             console.error('Error fetching test results:', error);

@@ -1,6 +1,5 @@
 package com.example.loginreg.controller;
 
-
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +13,6 @@ import com.example.loginreg.dto.LoginRequestDTO;
 import com.example.loginreg.dto.UserDto;
 import com.example.loginreg.service.UserService;
 
-
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/auth")
@@ -25,13 +23,12 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserDto userDto) {
-        try{
-        userService.saveUser(userDto);
-        return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
-    }
-        catch (Exception e) {
+        try {
+            userService.saveUser(userDto);
+            return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("Registration failed: " + e.getMessage());
+                    .body("Registration failed: " + e.getMessage());
         }
     }
 
@@ -51,12 +48,11 @@ public class UserController {
 
     @GetMapping("/userinfo")
     public ResponseEntity<String> findByUsername(HttpServletRequest request) {
-        
+
         String username = request.getUserPrincipal().getName();
-        
+
         return ResponseEntity.ok("Welcome " + username);
     }
-
 
     @GetMapping("/viewusers")
     public List<UserDto> findAllUsers() {
@@ -86,7 +82,7 @@ public class UserController {
 
     @GetMapping("/getTechnicians")
     public List<UserDto> getTechnicians() {
-    return userService.findUsersByRole("Technician");
+        return userService.findUsersByRole("Technician");
     }
 
 }

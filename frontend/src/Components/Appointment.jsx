@@ -8,17 +8,16 @@ function Appointment() {
     const [date, setDate] = useState('');
     const [tests, setTests] = useState([]);
     const [test, setTest] = useState('');
-    const [patientName, setpatientName] = useState('');
+    const [patientName, setPatientName] = useState('');
     const [appointmentNumber, setAppointmentNumber] = useState('');
     const [appointmentTime, setAppointmentTime] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-   
 
     useEffect(() => {
         fetchTests();
         const user = JSON.parse(localStorage.getItem('loggedInUser'));
         if (user && user.name) {
-            setpatientName(user.name);
+            setPatientName(user.name); 
         }
     }, []);
 
@@ -37,28 +36,26 @@ function Appointment() {
         try {
             const currentDate = new Date();
             const selectedDate = new Date(date);
-    
-            // Check if the selected date is before the current date
+
             if (selectedDate < currentDate) {
                 setErrorMessage('Please select a future date for the appointment.');
                 return;
             }
 
-             // Check if the selected date is beyond 30 days from the current date
-        const maxDate = new Date();
-        maxDate.setDate(currentDate.getDate() + 30);
-        if (selectedDate > maxDate) {
-            setErrorMessage('Appointment can be made within 1 month only!!');
-            return;
-        }
-    
+            const maxDate = new Date();
+            maxDate.setDate(currentDate.getDate() + 30);
+            if (selectedDate > maxDate) {
+                setErrorMessage('Appointment can be made within 1 month only!!');
+                return;
+            }
+
             const appointmentData = {
                 type: type,
                 date: selectedDate.toISOString().split('T')[0],
                 test: test,
                 patientName: patientName
             };
-    
+
             const response = await axios.post('http://localhost:8084/api/appointment/create', appointmentData);
             const { number, dateTime } = response.data;
             setAppointmentNumber(number);

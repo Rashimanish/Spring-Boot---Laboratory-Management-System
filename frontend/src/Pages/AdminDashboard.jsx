@@ -11,6 +11,7 @@ import WelcomeMessage from '../Components/WelcomeMessage';
 import Appointment from '../Components/Appointment';
 import ViewAppointment from '../Components/ViewAppointment';
 import TestResults from '../Components/TestResults';
+import PeakAppointmentTimes from '../Components/PeakAppointmentTimes';
 
 
 const AdminDashboard = () => {
@@ -33,6 +34,8 @@ const AdminDashboard = () => {
                 return <ViewAppointment />
             case 'viewResults' :
                 return <TestResults />
+            case 'peakAppointments':
+                return <PeakAppointmentTimes />
             default:
                 return null;
         }
@@ -52,7 +55,9 @@ const AdminDashboard = () => {
                             <Nav.Link href="/admin/makeAppointment" className="sidebar-link">Make Appointment</Nav.Link>
                             <Nav.Link href="/admin/viewAppointment" className="sidebar-link">View Appointments</Nav.Link>
                             <Nav.Link href="/admin/viewResults" className="sidebar-link">View Test Results</Nav.Link>
+                            <Nav.Link href="/admin/peakAppointments" className="sidebar-link">View Peak Appointments</Nav.Link>
                         </Nav>
+                        
                     </Col>
                     <Col md={9}>
     { selectedItem ? null : <h2 className="dashboard-heading">Admin Dashboard</h2>}

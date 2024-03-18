@@ -52,7 +52,6 @@ public class TestServiceImpl implements TestService{
         if (test != null && testDTO != null) {
             test.setTestName(testDTO.getTestName());
             test.setPrice(testDTO.getPrice());
-            test.setTestCode(testDTO.getTestCode());
             testRepository.save(test);
             return convertToDTO(test);
         }
@@ -70,7 +69,7 @@ public class TestServiceImpl implements TestService{
     private String generateTestCode() {
         Test lastTest = testRepository.findTopByOrderByTestCodeDesc();
         if (lastTest == null) {
-            return "T001"; // Set the first test code if no tests exist
+            return "T001"; 
         } else {
             int nextNumber = Integer.parseInt(lastTest.getTestCode().substring(1)) + 1;
             return String.format("T%03d", nextNumber);

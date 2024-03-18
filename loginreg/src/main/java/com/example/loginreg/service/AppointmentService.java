@@ -2,6 +2,7 @@ package com.example.loginreg.service;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public interface AppointmentService {
     List<AppointmentDTO> getAppointmentsByUser(String username);
     List <AppointmentDTO>getAppointmentTech(String username);
     AppointmentDTO getAppointmentById(String appointmentId);
+    Map<String, Long> getPeakAppointmentTimes(int year, int month , int date);
 
     
 } 

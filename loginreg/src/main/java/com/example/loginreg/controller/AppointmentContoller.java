@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.loginreg.dto.AppointmentDTO;
 import com.example.loginreg.service.AppointmentService;
+import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -69,6 +71,15 @@ public class AppointmentContoller {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     return new ResponseEntity<>(appointments, HttpStatus.OK);
+}
+
+@GetMapping("/peak-appointment-times")
+public ResponseEntity<Map<String, Long>> getPeakAppointmentTimes(
+        @RequestParam("year") int year,
+        @RequestParam("month") int month,
+        @RequestParam("date") int date) {
+    Map<String, Long> peakTimes = appointmentService.getPeakAppointmentTimes(year, month, date);
+    return ResponseEntity.ok().body(peakTimes);
 }
     
 }
