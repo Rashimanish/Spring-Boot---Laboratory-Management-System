@@ -18,6 +18,8 @@ public interface TestService {
     void deleteTest(String testCode);
 
     TestDTO updateTest(String id, TestDTO testDTO);
+    
+    double getTestPriceByName(String testName);
 
     
 }

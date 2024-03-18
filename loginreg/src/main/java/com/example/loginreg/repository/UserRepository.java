@@ -11,5 +11,6 @@ import com.example.loginreg.entity.User;
 public interface UserRepository extends MongoRepository <User, String> {
     User findByUsername(String username);
     List<User> findByRole(String role);
+    User findByName(String name);
     
 }

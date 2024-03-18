@@ -42,6 +42,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto findByName(String name) {
+        User user = userRepository.findByName(name);
+        return user != null ? mapToUserDto(user) : null;
+    }
+
+    @Override
     public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream().map(this::mapToUserDto).collect(Collectors.toList());

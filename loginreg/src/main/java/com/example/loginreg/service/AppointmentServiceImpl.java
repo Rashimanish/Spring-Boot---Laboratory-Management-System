@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,17 @@ import com.example.loginreg.factory.AppointmentNumberFactory;
 import com.example.loginreg.repository.AppointmentRepository;
 
 
+
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private TestService testService;
+
+
     
     @Override
     public List<AppointmentDTO> getAllAppointments() {
@@ -34,11 +41,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         String appointmentNumber = AppointmentNumberFactory.generateAppointmentNumber(appointmentDTO.getType());
         LocalDateTime appointmentDateTime = getNextAvailableAppointmentTime(LocalDate.parse(appointmentDTO.getDate()));
 
+        double testPrice = testService.getTestPriceByName(appointmentDTO.getTest());
+
         appointmentDTO.setNumber(appointmentNumber);
         appointmentDTO.setDateTime(appointmentDateTime);
         appointmentDTO.setStatus("Active");
         appointmentDTO.setTechnician("N/A");
         appointmentDTO.setDoctor("N/A");
+        appointmentDTO.setTestPrice(testPrice);
 
         Appointment appointment = convertToEntity(appointmentDTO);
         appointmentRepository.save(appointment);
@@ -63,6 +73,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             }
             if (updatedAppointment.getTest() != null) {
                 appointment.setTest(updatedAppointment.getTest());
+            }
+            if (updatedAppointment.getTestPrice() != 0) {
+                appointment.setTestPrice(updatedAppointment.getTestPrice());
             }
             if (updatedAppointment.getDoctor() != null) {
                 appointment.setDoctor(updatedAppointment.getDoctor());
@@ -102,6 +115,47 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
     }
 
+    @Override
+    public List<AppointmentDTO> getAppointmentsByUser(String username) {
+    List<Appointment> appointments = appointmentRepository.findByPatientName(username);
+    return appointments.stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+}
+
+    @Override
+    public List <AppointmentDTO>getAppointmentTech(String username){
+        List<Appointment> appointments = appointmentRepository.findByTechnician(username);
+        return appointments.stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public AppointmentDTO getAppointmentById(String appointmentId) {
+    Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
+    if (appointment != null) {
+        return convertToDTO(appointment);
+    }
+    return null; // Or throw an exception if needed
+    }
+
+    @Override
+    public Map<String, Long> getPeakAppointmentTimes(int year, int month, int date) {
+        LocalDateTime startOfDay = LocalDateTime.of(year, month, date, 0, 0);
+        LocalDateTime endOfDay = startOfDay.plusDays(1).minusSeconds(1);
+
+        List<Appointment> appointments = appointmentRepository.findByDateTimeBetween(startOfDay, endOfDay);
+
+        // Group appointments by hour of day and count the number of appointments in each hour
+        Map<String, Long> peakTimes = appointments.stream()
+                .collect(Collectors.groupingBy(appointment ->
+                                appointment.getDateTime().getHour() + ":00 - " +
+                                        appointment.getDateTime().plusHours(1).getHour() + ":00",
+                        Collectors.counting()));
+
+        return peakTimes;
+    }
     
     private Appointment convertToEntity(AppointmentDTO appointmentDTO) {
         Appointment appointment = new Appointment();
@@ -112,6 +166,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setStatus(appointmentDTO.getStatus());
         appointment.setPatientName(appointmentDTO.getPatientName());
         appointment.setTest(appointmentDTO.getTest());
+        appointment.setTestPrice(appointmentDTO.getTestPrice());
         appointment.setDoctor(appointmentDTO.getDoctor());
         appointment.setTechnician(appointmentDTO.getTechnician());
 
@@ -128,6 +183,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         dto.setStatus(appointment.getStatus());
         dto.setPatientName(appointment.getPatientName());
         dto.setTest(appointment.getTest());
+        dto.setTestPrice(appointment.getTestPrice());
         dto.setDoctor(appointment.getDoctor());
         dto.setTechnician(appointment.getTechnician());
         

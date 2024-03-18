@@ -2,23 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Table, Button, Modal, Form, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 
-function ViewAppointment() {
+function TechAppointments() {
     const [appointments, setAppointments] = useState([]);
-    const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [showTestResultModal, setShowTestResultModal] = useState(false);
     const [filteredAppointments, setFilteredAppointments] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [updateAppointment, setUpdateAppointment] = useState({
-        id: '',
-        type: '',
-        test: '', 
-        doctor: '', 
-        technician: '', 
-    });
-
-    const [tests, setTests] = useState([]);
-    const [technicians, setTechnicians] = useState([]);
-    const [doctors, setDoctors] = useState([]);
 
     const [testResultData, setTestResultData] = useState({
         appointmentId: '',
@@ -33,80 +21,30 @@ function ViewAppointment() {
         description: ''
     });
 
-
     useEffect(() => {
         fetchAppointments();
-        fetchTests();
-        fetchTechnicians();
-        fetchDoctors();
     }, []);
 
-    const fetchAppointments = async () => {
+    async function fetchAppointments() {
         try {
-            const response = await axios.get('http://localhost:8084/api/appointment/viewall');
-            setAppointments(response.data);
-            filterAppointments(response.data);
+            const user = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (user && user.name) {
+                const response = await axios.get(`http://localhost:8084/api/appointment/viewByTechnician/${user.name}`);
+                setAppointments(response.data);
+            }
         } catch (error) {
             console.error('Error fetching appointments:', error);
         }
-    };
+    }
 
-    const fetchTests = async () => {
-        try {
-            const response = await axios.get('http://localhost:8084/api/tests/viewall');
-            const sortedTests = response.data.sort((a, b) => a.testName.localeCompare(b.testName));
-            setTests(sortedTests);
-        } catch (error) {
-            console.error('Error fetching tests');
-        }
-    };
-
-    const fetchTechnicians = async () => {
-        try {
-            const response = await axios.get('http://localhost:8084/api/auth/getTechnicians');
-            setTechnicians(response.data);
-        } catch (error) {
-            console.error('Error fetching technicians:', error);
-        }
-    };
-
-    const fetchDoctors = async () => {
-        try {
-            const response = await axios.get('http://localhost:8084/api/doctors/viewall');
-            setDoctors(response.data);
-        } catch (error) {
-            console.error('Error fetching doctors:', error);
-        }
-    };
-
-    const handleUpdateAppointment = async () => {
-        try {
-            
-            const updatedData = {
-                id: updateAppointment.id,
-                type: updateAppointment.type,
-                test: updateAppointment.test,
-                technician: updateAppointment.technician,
-                doctor: updateAppointment.doctor,
-               
-            };
-
-            await axios.put(`http://localhost:8084/api/appointment/${updateAppointment.id}/update`, updatedData);
-            handleCloseUpdateModal();
-            fetchAppointments();
-        } catch (error) {
-            console.error('Error updating appointment:', error);
-        }
-    };
-
-    const handleCancelAppointment = async (appointmentId) => {
+    async function handleCancelAppointment(appointmentId) {
         try {
             await axios.put(`http://localhost:8084/api/appointment/${appointmentId}/cancel`);
             fetchAppointments();
         } catch (error) {
             console.error('Error canceling appointment:', error);
         }
-    };
+    }
 
     const handleTestResultSubmission = async () => {
         try {
@@ -117,23 +55,6 @@ function ViewAppointment() {
         } catch (error) {
             console.error('Error submitting test result:', error);
         }
-    };
-
-
-    const handleCloseUpdateModal = () => {
-        setShowUpdateModal(false);
-    };
-
-    const handleShowUpdateModal = (appointmentId) => {
-        const selectedAppointment = appointments.find(appointment => appointment.id === appointmentId);
-        setUpdateAppointment({
-            id: selectedAppointment.id,
-            type: selectedAppointment.type,
-            test: selectedAppointment.test,
-            technician: selectedAppointment.technician,
-            doctor: selectedAppointment.doctor
-        });
-        setShowUpdateModal(true);
     };
 
     const handleCloseTestResultModal = () => {
@@ -157,17 +78,14 @@ function ViewAppointment() {
         setShowTestResultModal(true);
     };
 
-
-    function formatDate(dateTime) {
-        const date = new Date(dateTime);
+    function formatDate(date) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return date.toLocaleDateString('en-US', options);
+        return new Date(date).toLocaleDateString(undefined, options);
     }
 
-    function formatTime(dateTime) {
-        const date = new Date(dateTime);
-        const options = { hour: '2-digit', minute: '2-digit', hour12: true };
-        return date.toLocaleTimeString('en-US', options);
+    function formatTime(date) {
+        const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+        return new Date(date).toLocaleTimeString(undefined, options);
     }
 
     const filterAppointments = useCallback((appointmentsData) => {
@@ -234,7 +152,6 @@ function ViewAppointment() {
                                 <td>{appointment.doctor}</td>
                                 <td>{appointment.status}</td>
                                 <td>
-                                    <Button variant="primary" onClick={() => handleShowUpdateModal(appointment.id)}>Update</Button>
                                     <Button variant="danger" onClick={() => handleCancelAppointment(appointment.id)}>Cancel</Button>
                                     <Button variant="info" onClick={() => handleShowTestResultModal(appointment.id)}>Test Result</Button>
                                 </td>
@@ -244,51 +161,6 @@ function ViewAppointment() {
                 </Table>
             )}
 
-            {/* Modal for Updating Appointment Details */}
-            <Modal show={showUpdateModal} onHide={handleCloseUpdateModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Update Appointment</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group controlId="updateType">
-                            <Form.Label>Appointment Type</Form.Label>
-                            <Form.Control as="select" value={updateAppointment.type} onChange={(e) => setUpdateAppointment({ ...updateAppointment, type: e.target.value })}>
-                                <option value="Regular">Regular</option>
-                                <option value="Emergency">Emergency</option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group controlId="updateTestName">
-                            <Form.Label>Test Name</Form.Label>
-                            <Form.Control as="select" value={updateAppointment.test} onChange={(e) => setUpdateAppointment({ ...updateAppointment, test: e.target.value })}>
-                                {tests.map(testItem => (
-                                    <option key={testItem.id} value={testItem.testName}>{testItem.testName}</option>
-                                ))}
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group controlId="updateTechnician">
-    <Form.Label>Technician</Form.Label>
-    <Form.Control as="select" value={updateAppointment.technician} onChange={(e) => setUpdateAppointment({ ...updateAppointment, technician: e.target.value })}>
-        {technicians.sort((a, b) => a.name.localeCompare(b.name)).map(technician => (
-            <option key={technician.id} value={technician.name}>{technician.name}</option>
-        ))}
-    </Form.Control>
-</Form.Group>
-<Form.Group controlId="updateDoctor">
-    <Form.Label>Doctor Name</Form.Label>
-    <Form.Control as="select" value={updateAppointment.doctor} onChange={(e) => setUpdateAppointment({ ...updateAppointment, doctor: e.target.value })}>
-        {doctors.sort((a, b) => a.name.localeCompare(b.name)).map(doctor => (
-            <option key={doctor.id} value={doctor.name}>{doctor.name}</option>
-        ))}
-    </Form.Control>
-</Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseUpdateModal}>Close</Button>
-                    <Button variant="primary" onClick={handleUpdateAppointment}>Save Changes</Button>
-                </Modal.Footer>
-            </Modal>
 {/* Modal for Test Result */}
 <Modal show={showTestResultModal} onHide={handleCloseTestResultModal}>
                 <Modal.Header closeButton>
@@ -320,4 +192,4 @@ function ViewAppointment() {
     );
 }
 
-export default ViewAppointment;
+export default TechAppointments;
