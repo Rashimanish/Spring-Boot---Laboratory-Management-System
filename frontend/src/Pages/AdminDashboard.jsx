@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Row, Col , Nav } from 'react-bootstrap';
+import { Container, Row, Col, Nav } from 'react-bootstrap';
 import Header from '../Components/Header';
 import AddUser from '../Components/AddUser';
 import ViewUser from '../Components/ViewUser';
@@ -13,33 +13,33 @@ import ViewAppointment from '../Components/ViewAppointment';
 import TestResults from '../Components/TestResults';
 import PeakAppointmentTimes from '../Components/PeakAppointmentTimes';
 
-
 const AdminDashboard = () => {
-
     const { selectedItem } = useParams();
-    
+    const [defaultSelectedItem] = useState('viewAppointment');
+
     const renderComponent = () => {
-        switch (selectedItem) {
+        switch (selectedItem || defaultSelectedItem) {
             case 'addUser':
                 return <AddUser />;
             case 'viewUser':
-               return <ViewUser />;
+                return <ViewUser />;
             case 'addTest':
-               return <TestForm />;
+                return <TestForm />;
             case 'doctorProfile':
-                return <DoctorProfile />
+                return <DoctorProfile />;
             case 'makeAppointment':
-                return <Appointment />
+                return <Appointment />;
             case 'viewAppointment':
-                return <ViewAppointment />
-            case 'viewResults' :
-                return <TestResults />
+                return <ViewAppointment />;
+            case 'viewResults':
+                return <TestResults />;
             case 'peakAppointments':
-                return <PeakAppointmentTimes />
+                return <PeakAppointmentTimes />;
             default:
                 return null;
         }
     };
+
     return (
         <div className="dashboard-container">
             <Header />
@@ -57,10 +57,9 @@ const AdminDashboard = () => {
                             <Nav.Link href="/admin/viewResults" className="sidebar-link">View Test Results</Nav.Link>
                             <Nav.Link href="/admin/peakAppointments" className="sidebar-link">View Peak Appointments</Nav.Link>
                         </Nav>
-                        
                     </Col>
                     <Col md={9}>
-    { selectedItem ? null : <h2 className="dashboard-heading">Admin Dashboard</h2>}
+                        {!selectedItem && <h2 className="dashboard-heading">Admin Dashboard</h2>}
                         {renderComponent()}
                     </Col>
                 </Row>

@@ -244,7 +244,7 @@ function ViewAppointment() {
                 </Table>
             )}
 
-            {/* Modal for Updating Appointment Details */}
+           
             <Modal show={showUpdateModal} onHide={handleCloseUpdateModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Update Appointment</Modal.Title>

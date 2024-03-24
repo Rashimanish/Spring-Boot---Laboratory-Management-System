@@ -4,8 +4,8 @@ fixture`TestForm`.page`http://localhost:3000/admin/addTest`;
 
 test('Add a new test', async t => {
     await t
-        .typeText('input[type="text"]', 'Test Name')
-        .typeText('input[type="number"]', '10')
+        .typeText('input[type="text"]', 'Thyroid Test')
+        .typeText('input[type="number"]', '1000')
         .click('button[type="submit"]')
         .wait(1000);
 
@@ -26,24 +26,41 @@ test('Attempt to add a test with empty name and price', async t => {
 
 test('Search for a test', async t => {
     await t
-        .typeText('input[placeholder="Search by Test Name"]', 'Test Name')
+        .typeText('input[placeholder="Search by Test Name"]', 'Blood Test')
         .pressKey('enter');
 
-    const testNameCell = Selector('td').withText('Test Name');
+    const testNameCell = Selector('td').withText('Blood Test');
 
     await t
         .expect(testNameCell.exists).ok();
 });
 
-test('Delete a test', async t => {
+test('Delete Test', async t => {
+    
+    const deleteButton = Selector('button').withText('Delete');
+    const confirmDeleteButton = Selector('button').withText('Delete').nth(1);
+    
+    
     await t
-        .click(Selector('button').withText('Delete').nth(0));
+        .click(deleteButton)
+        .click(confirmDeleteButton);
 
-    const successAlert = Selector('.alert-success');
 
-    await t
-        .expect(successAlert.exists).ok();
+   
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

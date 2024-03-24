@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const Header = () => {
     const handleLogout = () => {
         localStorage.removeItem('loggedInUser');
-        window.location.href = '/login'; // Redirect to the login page after logout
+        window.location.href = '/login'; 
     };
 
     return (

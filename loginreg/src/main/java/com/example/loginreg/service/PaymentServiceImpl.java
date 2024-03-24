@@ -30,23 +30,23 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void savePayment(PaymentDTO paymentDTO) {
         try {
-            // Fetch appointment by appointment ID to get the patient name
+            
             String appointmentId = paymentDTO.getAppointmentId();
             Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
 
             if (appointment != null) {
-                // Create Payment entity and populate fields
+                
                 Payment payment = new Payment();
                 payment.setToken(paymentDTO.getToken());
                 payment.setAppointmentId(appointmentId);
                 payment.setStatus("paid");
 
-                // Set patient name, test name, and test price from the appointment details
+                
                 payment.setPatientName(appointment.getPatientName());
                 payment.setTestName(appointment.getTest());
                 payment.setTestPrice(appointment.getTestPrice());
 
-                // Fetch user by patient name to get the email address
+                
                 String patientName = appointment.getPatientName();
                 User user = userRepository.findByName(patientName);
 
@@ -54,10 +54,10 @@ public class PaymentServiceImpl implements PaymentService {
                     String emailAddress = user.getEmail();
                     payment.setEmailAddress(emailAddress);
 
-                    // Save payment entity
+                    
                     paymentRepository.save(payment);
 
-                    // Send receipt email
+                   
                     sendReceipt(payment);
                 } else {
                     throw new RuntimeException("User not found for patient name: " + patientName);

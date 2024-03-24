@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import { Container, Table, Form, Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
@@ -7,7 +9,8 @@ const ViewUser = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
-    
+    const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
 
     useEffect(() => {
         fetchUsers();
@@ -38,34 +41,32 @@ const ViewUser = () => {
         setShowModal(true);
     }
 
+    const handleDeleteConfirmation = (user) => {
+        setUserToDelete(user);
+        setShowDeleteConfirmationModal(true);
+    };
 
-    const handleDelete = (id) => {
-
-        const userId = String(id);
-    
-        axios.delete(`http://localhost:8084/api/auth/deleteuser/${id}`)
-            .then(() => {
-
-                setUsers(users.filter(user => user.id !== userId));
-            })
-            .catch(error => {
-                console.error('Error deleting user:', error);
-            });
+    const handleDelete = () => {
+        if (userToDelete && userToDelete.id) {
+            axios.delete(`http://localhost:8084/api/auth/deleteuser/${userToDelete.id}`)
+                .then(() => {
+                    setUsers(users.filter(user => user.id !== userToDelete.id));
+                    setShowDeleteConfirmationModal(false);
+                })
+                .catch(error => {
+                    console.error('Error deleting user:', error);
+                });
+        }
     }
 
     const handleSaveChanges = () => {
         if (selectedUser && selectedUser.id) {
-            
             const { name, username, email, age, contact, gender } = selectedUser;
-
             const updatedUser = { name, username, email, age, contact, gender };
-
 
             axios.put(`http://localhost:8084/api/auth/updateuser/${selectedUser.id}`, updatedUser)
                 .then(() => {
-                    
                     setShowModal(false);
-                    
                     fetchUsers();
                 })
                 .catch(error => {
@@ -99,23 +100,22 @@ const ViewUser = () => {
                     </tr>
                 </thead>
                 <tbody>
-    {filteredUsers.map(user => (
-            <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.age}</td>
-                <td>{user.contact}</td>
-                <td>{user.gender}</td>
-                <td>{user.email}</td>
-                <td>{user.username}</td>
-                <td>{user.role}</td>
-                <td>
-                    <Button variant="primary" onClick={() => handleEdit(user)}>Edit</Button>{' '}
-                    <Button variant="danger" onClick={() => handleDelete(user.id)}>Delete</Button>
-                </td>
-            </tr>
-        
-    ))}
-    </tbody>
+                    {filteredUsers.map(user => (
+                        <tr key={user.id}>
+                            <td>{user.name}</td>
+                            <td>{user.age}</td>
+                            <td>{user.contact}</td>
+                            <td>{user.gender}</td>
+                            <td>{user.email}</td>
+                            <td>{user.username}</td>
+                            <td>{user.role}</td>
+                            <td>
+                                <Button variant="primary" onClick={() => handleEdit(user)}>Edit</Button>{' '}
+                                <Button variant="danger" onClick={() => handleDeleteConfirmation(user)}>Delete</Button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
             </Table>
 
             <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -123,8 +123,7 @@ const ViewUser = () => {
                     <Modal.Title>Edit User</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    
-                    {selectedUser !== null &&(
+                    {selectedUser !== null && (
                         <Form>
                             <Form.Group controlId="formName">
                                 <Form.Label>Name</Form.Label>
@@ -162,8 +161,41 @@ const ViewUser = () => {
                     <Button variant="primary" onClick={handleSaveChanges}>Save Changes</Button>
                 </Modal.Footer>
             </Modal>
+
+            <Modal show={showDeleteConfirmationModal} onHide={() => setShowDeleteConfirmationModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Deletion</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Are you sure you want to delete this user?</p>
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={() => setShowDeleteConfirmationModal(false)}>
+                        Close
+                    </Button>
+                    <Button variant="danger" onClick={handleDelete}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 }
 
 export default ViewUser;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
