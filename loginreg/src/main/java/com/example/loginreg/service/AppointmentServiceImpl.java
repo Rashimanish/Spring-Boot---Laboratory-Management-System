@@ -89,8 +89,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
     private LocalDateTime getNextAvailableAppointmentTime(LocalDate selectedDate) {
         LocalTime startTime = LocalTime.of(9, 0);
-        LocalTime endTime = LocalTime.of(17, 0); // Assuming appointments end at 5 PM
-
+        LocalTime endTime = LocalTime.of(17, 0); 
         LocalDateTime nextAvailableTime = LocalDateTime.of(selectedDate, startTime);
 
         // Find the next available time slot for the selected date
@@ -137,7 +136,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     if (appointment != null) {
         return convertToDTO(appointment);
     }
-    return null; // Or throw an exception if needed
+    return null; 
     }
 
     @Override

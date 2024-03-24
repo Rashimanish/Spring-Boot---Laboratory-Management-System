@@ -27,7 +27,7 @@ public class TestResultServiceImpl implements TestResultService{
     public TestResultDTO createTestResult(TestResultDTO testResultDTO) {
         Test test = testRepository.findByTestName(testResultDTO.getTestName());
         if (test != null) {
-            // Fetch the testCode from the test object and set it in the DTO
+
             testResultDTO.setTestCode(test.getTestCode());
             TestResult testResult = convertToEntity(testResultDTO);
             testResultRepository.save(testResult);

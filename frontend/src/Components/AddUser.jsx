@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './component.css';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,53 +16,64 @@ const AddUser = () => {
         password: '',
         role: ''
     });
-    const [error, setError] = useState('');
+    const [errors, setErrors] = useState({});
     const [success, setSuccess] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+        
+        setErrors({ ...errors, [name]: '' });
+       
+        setSuccess('');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Check if any field is empty
-        if (!validateForm()) {
-            setError('Please fill in all the fields.');
-            return;
-        }
-
-        try {
-            const response = await axios.post('http://localhost:8084/api/auth/register', formData);
-            // Check if registration was successful
-            if (response.status === 200) {
-                setSuccess('User registered successfully!');
-                setTimeout(() => {
-                    navigate('/admin/viewUser');
-                }, 2000); // Redirect after 2 seconds
-            }
-        } catch (error) {
-            // Handle registration failure and display error message
-            setError('Registration failed. Please try again.');
-            console.error('Registration failed:', error);
-        }
-    };
-
-    const validateForm = () => {
+        
+        const newErrors = {};
         for (const field in formData) {
             if (!formData[field].trim()) {
-                return false;
+                newErrors[field] = 'Please fill in this field.';
             }
         }
-        return true;
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+    
+        try {
+            const response = await axios.post('http://localhost:8084/api/auth/register', formData);
+            
+            if (response.status === 200) {
+                setFormData({
+                    name: '',
+                    age: '',
+                    contact: '',
+                    gender: '',
+                    email: '',
+                    username: '',
+                    password: '',
+                    role: ''
+                }); 
+                setErrors({}); 
+                setSuccess('User registered successfully!'); 
+                navigate('/admin/viewUser');
+            }
+        } catch (error) {
+            
+            console.error('Registration failed:', error);
+            setErrors({ server: 'Registration failed. Please try again.' });
+            setSuccess('');
+        }
     };
 
     return (
         <div className='reg-container'>
             <div className="form-container">
                 <h2 className="text-center">Create User</h2>
-                {error && <Alert variant="danger">{error}</Alert>}
-                {success && <Alert variant="success">{success}</Alert>}
+                {errors.server && <Form.Label className="text-danger">{errors.server}</Form.Label>}
+                {success && <Form.Label className="text-success">{success}</Form.Label>}
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="name">
                         <Form.Label>Name</Form.Label>
@@ -74,6 +85,7 @@ const AddUser = () => {
                             onChange={handleChange}
                             required
                         />
+                        {errors.name && <Form.Text className="text-danger">{errors.name}</Form.Text>}
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="age">
@@ -86,6 +98,7 @@ const AddUser = () => {
                             onChange={handleChange}
                             required
                         />
+                        {errors.age && <Form.Text className="text-danger">{errors.age}</Form.Text>}
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="contact">
@@ -98,6 +111,7 @@ const AddUser = () => {
                             onChange={handleChange}
                             required
                         />
+                        {errors.contact && <Form.Text className="text-danger">{errors.contact}</Form.Text>}
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="gender">
@@ -113,6 +127,7 @@ const AddUser = () => {
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                         </Form.Select>
+                        {errors.gender && <Form.Text className="text-danger">{errors.gender}</Form.Text>}
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="email">
@@ -125,6 +140,7 @@ const AddUser = () => {
                             onChange={handleChange}
                             required
                         />
+                        {errors.email && <Form.Text className="text-danger">{errors.email}</Form.Text>}
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="username">
@@ -137,6 +153,7 @@ const AddUser = () => {
                             onChange={handleChange}
                             required
                         />
+                        {errors.username && <Form.Text className="text-danger">{errors.username}</Form.Text>}
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="password">
@@ -149,6 +166,7 @@ const AddUser = () => {
                             onChange={handleChange}
                             required
                         />
+                        {errors.password && <Form.Text className="text-danger">{errors.password}</Form.Text>}
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="role">
@@ -163,6 +181,7 @@ const AddUser = () => {
                             <option value="Patient">Patient</option>
                             <option value="Technician">Technician</option>
                         </Form.Select>
+                        {errors.role && <Form.Text className="text-danger">{errors.role}</Form.Text>}
                     </Form.Group>
 
                     <Button variant="primary" type="submit">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import Header from '../Components/Header';
@@ -8,17 +8,16 @@ import MyAppointments from '../Components/MyAppointments';
 import Footer from '../Components/Footer';
 import MyTestResult from '../Components/MyTestResult';
 
-
 const PatientDashboard = () => {
     const { selectedItem } = useParams();
+    const [defaultSelectedItem, setDefaultSelectedItem] = useState('makeAppointment');
 
     const renderComponent = () => {
-        switch (selectedItem) {
+        switch (selectedItem || defaultSelectedItem) {
             case 'makeAppointment':
                 return <Appointment />;
             case 'viewMyAppointment':
-                return  <MyAppointments />;
-              
+                return <MyAppointments />;
             case 'viewMyResult':
                 return <MyTestResult />;
             default:
@@ -40,7 +39,7 @@ const PatientDashboard = () => {
                         </Nav>
                     </Col>
                     <Col md={9}>
-    { selectedItem ? null : <h2 className="dashboard-heading">Patient Dashboard</h2>}
+                        { !selectedItem && <h2 className="dashboard-heading">Patient Dashboard</h2> }
                         {renderComponent()}
                     </Col>
                 </Row>

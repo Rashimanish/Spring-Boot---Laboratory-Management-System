@@ -63,7 +63,7 @@ function Appointment() {
             setErrorMessage('');
         } catch (error) {
             console.error('Error creating appointment:', error);
-            setErrorMessage('Error creating appointment');
+            setErrorMessage('Please Fill the Required fields!!');
         }
     };
 
@@ -73,7 +73,7 @@ function Appointment() {
             <Form>
                 <FormGroup>
                     <Form.Label>Type:</Form.Label>
-                    <Form.Control as="select" value={type} onChange={(e) => setType(e.target.value)}>
+                    <Form.Control as="select" name="type" value={type} onChange={(e) => setType(e.target.value)}>
                         <option value="emergency">Emergency</option>
                         <option value="regular">Regular</option>
                     </Form.Control>
@@ -84,7 +84,7 @@ function Appointment() {
                 </FormGroup>
                 <FormGroup>
                     <Form.Label>Test:</Form.Label>
-                    <Form.Control as="select" value={test} onChange={(e) => setTest(e.target.value)}>
+                    <Form.Control as="select" name="test" value={test} onChange={(e) => setTest(e.target.value)}>
                         {tests.map(testItem => (
                             <option key={testItem.id} value={testItem.testName}>{testItem.testName}</option>
                         ))}
