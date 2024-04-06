@@ -51,52 +51,87 @@ Project Structure
 
 ## API Endpoints
 
-Signup for New User: POST/api/auth/register
+---
 
-View All Users : GET/api/auth/viewusers
+## Authentication
 
-Edit User Details: PUT/updateuser/{id}
+- **Signup for New User**
+  - `POST /api/auth/register`
 
-Delete User : DELETE/deleteuser/{id}
+- **View All Users**
+  - `GET /api/auth/viewusers`
 
-Login : POST/api/auth/login
+- **Edit User Details**
+  - `PUT /updateuser/{id}`
 
-Make Appointments: POST/api/appointment/create
+- **Delete User**
+  - `DELETE /deleteuser/{id}`
 
-View All Appointments : GET/api/appointment/viewall
+- **Login**
+  - `POST /api/auth/login`
 
-View Appointments by User : GET/api/appointment/{username}
+## Appointments
 
-Update Appointments: PUT/api/{appointmentId}/update
+- **Make Appointments**
+  - `POST /api/appointment/create`
 
-Cancel Appointments: PUT/api/{appointmentId}/cancel
+- **View All Appointments**
+  - `GET /api/appointment/viewall`
 
-Create Doctor details: POST/api/doctors/adddoctor
+- **View Appointments by User**
+  - `GET /api/appointment/{username}`
 
-View Doctor details : GET/api/doctors/viewall
+- **Update Appointments**
+  - `PUT /api/{appointmentId}/update`
 
-Update Doctor details : PUT/api/doctors/update/{id}
+- **Cancel Appointments**
+  - `PUT /api/{appointmentId}/cancel`
 
-Delete Doctor details: DELETE/api/doctors/delete/{id}
+## Doctors
 
-Create Test: POST/api/tests/addtest
+- **Create Doctor details**
+  - `POST /api/doctors/adddoctor`
 
-View Tests : GET/api/tests/viewall
+- **View Doctor details**
+  - `GET /api/doctors/viewall`
 
-Update Tests : PUT/api/tests/update/{id}
+- **Update Doctor details**
+  - `PUT /api/doctors/update/{id}`
 
-Delete Tests: DELETE/api/doctors/delete/{id}
+- **Delete Doctor details**
+  - `DELETE /api/doctors/delete/{id}`
 
-Update Test Results : POST/api/result/create
+## Tests
 
-Make Payment : POST/api/payment/charge
+- **Create Test**
+  - `POST /api/tests/addtest`
 
+- **View Tests**
+  - `GET /api/tests/viewall`
+
+- **Update Tests**
+  - `PUT /api/tests/update/{id}`
+
+- **Delete Tests**
+  - `DELETE /api/tests/delete/{id}`
+
+## Test Results
+
+- **Update Test Results**
+  - `POST /api/result/create`
+
+## Payments
+
+- **Make Payment**
+  - `POST /api/payment/charge`
+
+---
 
 
 
 ## API Reference
 
-#### Documentation
+#### For more detailed documentation, refer to the [official Spring guide]
 
 ```http
   https://spring.io/guides/tutorials/react-and-spring-data-rest
